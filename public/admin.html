@@ -235,9 +235,10 @@
 
     /* Messages */
     .msg{font-size:.78rem;padding:.55rem .85rem;border-radius:8px;margin-top:.7rem;display:none;font-weight:500}
-    .msg.show{display:block}
-    .msg.ok{background:var(--success-bg);border:1px solid var(--success-border);color:var(--success)}
-    .msg.err{background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
+    .msg.show{display:block!important}
+    .msg.ok{display:none;background:var(--success-bg);border:1px solid var(--success-border);color:var(--success)}
+    .msg.err{display:none;background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
+    .msg.ok.show,.msg.err.show{display:block!important}
     .empty{text-align:center;color:var(--muted);font-size:.82rem;padding:2.5rem 0}
 
     .prod-grid-hdr{display:grid;grid-template-columns:1fr 160px 80px auto;gap:.6rem;font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:.3rem 0;border-bottom:1px solid var(--border);margin-bottom:.1rem}
