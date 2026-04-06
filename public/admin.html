@@ -293,7 +293,7 @@
       <label>Admin Key</label>
       <input type="password" id="admin-key" placeholder="Enter your admin key…" onkeydown="if(event.key==='Enter')login()"/>
     </div>
-    <button class="btn btn-primary" style="width:100%;padding:.72rem" onclick="login()">Sign In →</button>
+    <button class="btn btn-primary" id="login-btn" style="width:100%;padding:.72rem" onclick="login()">Sign In →</button>
     <div class="msg err" id="login-err">Incorrect admin key. Please try again.</div>
   </div>
 </div>
@@ -572,39 +572,66 @@ let editingInstrId = null;
 
 // ── Login ────────────────────────────────────────────────────────────────────
 async function login() {
-  const key    = document.getElementById('admin-key').value.trim();
-  const errEl  = document.getElementById('login-err');
-  const btn    = document.querySelector('#login-wrap .btn-primary');
-  if (!key) { errEl.textContent='Please enter your admin key.'; errEl.classList.add('show'); return; }
+  var key   = document.getElementById('admin-key').value.trim();
+  var errEl = document.getElementById('login-err');
+  var btn   = document.getElementById('login-btn');
+
+  // Clear previous error
   errEl.classList.remove('show');
-  btn.textContent = 'Signing in…'; btn.disabled = true;
-  try {
-    const r = await fetch('/admin/sessions-data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ adminKey: key })
-    });
-    if (!r.ok && r.status !== 200) throw new Error('Server error ' + r.status);
-    const d = await r.json();
-    if (d.error) {
-      errEl.textContent = 'Incorrect admin key. Please try again.';
-      errEl.classList.add('show');
-      btn.textContent = 'Sign In →'; btn.disabled = false;
-      return;
-    }
-    // Auth succeeded — load data then show app
-    adminKey = key; allTokens = d.tokens; emailLog = d.emailLog || [];
-    await loadProductsPage();
-    await loadInstrSetsPage();
-    document.getElementById('login-wrap').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    renderDash(); renderCustomers(); loadEC(); renderEL();
-    updateDeactBadge(); renderLinks();
-  } catch(err) {
-    errEl.textContent = 'Connection error. Is the server running?';
+
+  if (!key) {
+    errEl.textContent = 'Please enter your admin key.';
     errEl.classList.add('show');
-    btn.textContent = 'Sign In →'; btn.disabled = false;
+    return;
   }
+
+  btn.textContent = 'Signing in…';
+  btn.disabled    = true;
+
+  var r, d;
+  try {
+    r = await fetch('/admin/sessions-data', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ adminKey: key })
+    });
+    d = await r.json();
+  } catch(e) {
+    errEl.textContent = 'Cannot reach the server. Make sure the app is running.';
+    errEl.classList.add('show');
+    btn.textContent = 'Sign In →';
+    btn.disabled    = false;
+    return;
+  }
+
+  if (d.error) {
+    errEl.textContent = 'Incorrect admin key. Please try again.';
+    errEl.classList.add('show');
+    btn.textContent = 'Sign In →';
+    btn.disabled    = false;
+    return;
+  }
+
+  // Auth OK — store data
+  adminKey  = key;
+  allTokens = d.tokens   || {};
+  emailLog  = d.emailLog || [];
+
+  // Load settings (these are non-critical — don't let them block login)
+  try { await loadProductsPage(); }   catch(e) {}
+  try { await loadInstrSetsPage(); }  catch(e) {}
+
+  // Show the app
+  document.getElementById('login-wrap').style.display = 'none';
+  document.getElementById('app').style.display        = 'flex';
+
+  // Render all sections (each wrapped so one failure doesn't kill the rest)
+  try { renderDash(); }        catch(e) { console.error('renderDash', e); }
+  try { renderCustomers(); }   catch(e) { console.error('renderCustomers', e); }
+  try { renderLinks(); }       catch(e) { console.error('renderLinks', e); }
+  try { loadEC(); }            catch(e) {}
+  try { renderEL(); }          catch(e) {}
+  try { updateDeactBadge(); }  catch(e) {}
 }
 
 function nav(page, el) {
