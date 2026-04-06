@@ -235,49 +235,11 @@
 
     /* Messages */
     .msg{font-size:.78rem;padding:.55rem .85rem;border-radius:8px;margin-top:.7rem;display:none;font-weight:500}
-    .msg.show{display:block!important}
-    .msg.ok{display:none;background:var(--success-bg);border:1px solid var(--success-border);color:var(--success)}
-    .msg.err{display:none;background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
-    .msg.ok.show,.msg.err.show{display:block!important}
+    .msg.show{display:block}
+    .msg.ok{background:var(--success-bg);border:1px solid var(--success-border);color:var(--success)}
+    .msg.err{background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
     .empty{text-align:center;color:var(--muted);font-size:.82rem;padding:2.5rem 0}
 
-    .prod-grid-hdr{display:grid;grid-template-columns:1fr 160px 80px auto;gap:.6rem;font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:.3rem 0;border-bottom:1px solid var(--border);margin-bottom:.1rem}
-    .sess-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .55rem;border-radius:5px;font-size:.64rem;font-weight:600;background:#fdf4ff;border:1px solid #e9d5ff;color:#7c3aed;white-space:nowrap}
-    .sess-warn{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn);border-radius:7px;padding:.4rem .7rem;font-size:.72rem;font-weight:500;display:flex;align-items:flex-start;gap:.4rem;margin-top:.25rem;line-height:1.5}
-
-
-    /* ── Links page ── */
-    .links-search-bar{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
-    .links-search-bar input{flex:1;min-width:160px;padding:.52rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border-color .2s}
-    .links-search-bar input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-    .lk-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:.75rem;box-shadow:var(--shadow);transition:border-color .2s}
-    .lk-card.deactivated{border-color:var(--error-border);background:var(--error-bg);opacity:.85}
-    .lk-card.expiring-soon{border-color:var(--warn-border);background:var(--warn-bg)}
-    .lk-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem}
-    .lk-name{font-size:.95rem;font-weight:700;color:var(--text)}
-    .lk-pkg{font-size:.74rem;color:var(--muted);margin-top:.12rem}
-    .lk-meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem .8rem;margin-bottom:.85rem}
-    @media(max-width:700px){.lk-meta-grid{grid-template-columns:1fr 1fr}}
-    .lk-field-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.1rem;font-weight:600}
-    .lk-field-val{font-size:.74rem;font-family:'JetBrains Mono',monospace;color:var(--text);word-break:break-all;line-height:1.45}
-    .lk-field-val.muted{color:var(--muted2);font-family:'Inter',sans-serif}
-    .lk-field-val.green{color:var(--success)}
-    .lk-field-val.warn{color:var(--warn)}
-    .lk-field-val.red{color:var(--error)}
-    .lk-link-row{display:flex;align-items:center;gap:.5rem;background:#f8faff;border:1px solid var(--blue-mid);border-radius:8px;padding:.5rem .75rem;margin-bottom:.8rem}
-    .lk-link-url{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--blue);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .lk-actions{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}
-    .deact-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.32rem .75rem;border-radius:7px;font-size:.73rem;font-weight:700;cursor:pointer;border:1.5px solid;transition:all .18s;white-space:nowrap;font-family:'Inter',sans-serif}
-    .deact-btn.active-state{background:var(--error-bg);border-color:var(--error-border);color:var(--error)}
-    .deact-btn.active-state:hover{background:#fee2e2;border-color:#fca5a5}
-    .deact-btn.deact-state{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
-    .deact-btn.deact-state:hover{background:#dcfce7;border-color:#86efac}
-    .deact-banner{background:var(--error-bg);border:1px solid var(--error-border);border-radius:8px;padding:.55rem .85rem;display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--error);font-weight:600;margin-bottom:.7rem}
-    .sub-bar-wrap{margin-bottom:.85rem}
-    .sub-bar-label{display:flex;justify-content:space-between;font-size:.64rem;color:var(--muted);margin-bottom:.28rem;font-weight:500}
-    .sub-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
-    .sub-bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
-    .lk-filter-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.9rem}
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   </style>
 </head>
@@ -294,7 +256,7 @@
       <label>Admin Key</label>
       <input type="password" id="admin-key" placeholder="Enter your admin key…" onkeydown="if(event.key==='Enter')login()"/>
     </div>
-    <button class="btn btn-primary" id="login-btn" style="width:100%;padding:.72rem" onclick="login()">Sign In →</button>
+    <button class="btn btn-primary" style="width:100%;padding:.72rem" onclick="login()">Sign In →</button>
     <div class="msg err" id="login-err">Incorrect admin key. Please try again.</div>
   </div>
 </div>
@@ -314,13 +276,10 @@
       <div class="nav-sec">Main</div>
       <div class="nav-item active" onclick="nav('dashboard',this)"><span class="icon">⚡</span>Dashboard</div>
       <div class="nav-item" onclick="nav('customers',this)"><span class="icon">👤</span>Customers<span class="nav-badge" id="nb-exp" style="display:none">0</span></div>
-      <div class="nav-item" onclick="nav('links',this)"><span class="icon">🔗</span>Links<span class="nav-badge" id="nb-deact" style="display:none">0</span></div>
       <div class="nav-sec" style="margin-top:.5rem">Settings</div>
-      <div class="nav-item" onclick="nav('products',this)"><span class="icon">📦</span>Custom Products</div>
-      <div class="nav-item" onclick="nav('instrsets',this)"><span class="icon">📋</span>Instructions Library</div>
       <div class="nav-item" onclick="nav('email',this)"><span class="icon">✉</span>Email Config</div>
     </div>
-    <div class="sb-footer">Admin Panel v3.0</div>
+    <div class="sb-footer">Admin Panel v2.0</div>
   </nav>
 
   <main class="main">
@@ -340,26 +299,16 @@
               <option value="">— Select Package —</option>
               <option>Claude Pro — 1 Month</option><option>Claude Pro — 3 Months</option>
               <option>Claude Pro — 6 Months</option><option>Claude Pro — 1 Year</option>
-              <option>GrokSuper — 1 Month</option><option>GrokSuper — 3 Months</option>
-              <option>GrokSuper — 6 Months</option><option>GrokSuper — 1 Year</option>
               <option>Custom Package</option>
             </select>
           </div>
         </div>
-        <div class="form-row" style="margin-top:.7rem">
-          <div class="form-group" style="margin-bottom:0">
-            <label>Instructions Set <span style="font-weight:400;color:var(--muted2)">(shown to customer)</span></label>
-            <select id="instr-set">
-              <option value="">— No instructions —</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn btn-primary" style="margin-top:.8rem" onclick="generateLink()">⚡ Generate Link</button>
+        <button class="btn btn-primary" style="margin-top:.2rem" onclick="generateLink()">⚡ Generate Link</button>
         <div class="msg err" id="gen-err"></div>
         <div class="link-result" id="link-result">
           <div class="lr-label">✓ Link Ready — Share with customer</div>
           <div class="lr-row"><span class="lr-text" id="gen-link"></span><button class="copy-btn" id="copy-btn" onclick="copyGenLink()">Copy</button></div>
-          <div class="lr-note">✓ This link is valid for <strong>6 months</strong>. The customer can return to it any time to check their subscription status.</div>
+          <div class="lr-note">⚠ This link expires in <strong>8 hours</strong> and is single-use.</div>
         </div>
       </div>
 
@@ -397,93 +346,6 @@
         <button class="fb" onclick="setCF('expired',this)">Expired</button>
       </div>
       <div id="cust-list"><div class="empty">Loading…</div></div>
-    </div>
-
-    <!-- Products -->
-    <div class="page" id="page-products">
-      <div class="ph"><div class="ph-title">Custom Products</div><div class="ph-sub">Define the packages available when generating activation links. Changes apply immediately.</div></div>
-      <div class="card">
-        <div class="card-title"><span>Product List</span><button class="btn btn-primary btn-sm" onclick="addProduct()">+ Add Product</button></div>
-        <div class="prod-grid-hdr"><span>Product Name</span><span>Duration</span><span>Session Field</span><span></span></div>
-        <div id="products-list"></div>
-        <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap">
-          <button class="btn btn-success" onclick="saveProducts()">✓ Save Products</button>
-          <button class="btn btn-outline" onclick="loadProductsPage()">↻ Reset</button>
-        </div>
-        <div class="msg ok" id="prod-ok"></div><div class="msg err" id="prod-err"></div>
-      </div>
-    </div>
-
-    <!-- Instructions Library -->
-    <div class="page" id="page-instrsets">
-      <div class="ph"><div class="ph-title">Instructions Library</div><div class="ph-sub">Create named instruction sets and select one when generating a link. Each customer sees exactly the right steps for their product.</div></div>
-      <div class="card">
-        <div class="card-title"><span>Saved instruction sets</span><button class="btn btn-primary btn-sm" onclick="newInstrSet()">+ New Set</button></div>
-        <div id="instr-sets-list"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card" id="instr-editor-card" style="display:none">
-        <div class="card-title" id="instr-editor-title">Edit instruction set</div>
-        <div class="form-group">
-          <label>Set Name <span style="font-weight:400;color:var(--muted2)">(e.g. "ChatGPT Instructions")</span></label>
-          <input type="text" id="ie-name" placeholder="e.g. Claude Pro Instructions"/>
-        </div>
-        <div class="form-group">
-          <label>Before approval — what to show on the submission form</label>
-          <p style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem">One step per line. Use **bold** for emphasis.</p>
-          <textarea id="ie-before" rows="6" oninput="updateIEPreview()" placeholder="1. Open claude.ai and sign in.&#10;2. Click your profile icon → Settings → Account.&#10;3. Copy your Organization ID."></textarea>
-        </div>
-        <div class="form-group" style="margin-top:-.2rem">
-          <label style="font-size:.68rem;color:var(--muted2);font-weight:400">Preview</label>
-          <div id="ie-before-preview" style="background:#f8faff;border:1px solid var(--blue-mid);border-radius:8px;padding:.75rem 1rem;font-size:.77rem;color:var(--muted);line-height:1.8;min-height:44px"></div>
-        </div>
-        <div class="form-group" style="margin-top:.3rem">
-          <label>After approval — verification steps shown on the success screen</label>
-          <p style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem">One step per line. Use **bold** for emphasis.</p>
-          <textarea id="ie-after" rows="5" oninput="updateIEPreview()" placeholder="1. Open claude.ai and sign in.&#10;2. Go to Settings → Billing.&#10;3. Your plan should show as Claude Pro."></textarea>
-        </div>
-        <div class="form-group" style="margin-top:-.2rem">
-          <label style="font-size:.68rem;color:var(--muted2);font-weight:400">Preview</label>
-          <div id="ie-after-preview" style="background:#f8faff;border:1px solid var(--blue-mid);border-radius:8px;padding:.75rem 1rem;font-size:.77rem;color:var(--muted);line-height:1.8;min-height:44px"></div>
-        </div>
-        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.4rem">
-          <button class="btn btn-success" onclick="saveInstrSet()">✓ Save Set</button>
-          <button class="btn btn-outline" onclick="cancelInstrEdit()">Cancel</button>
-        </div>
-        <div class="msg ok" id="ie-ok"></div><div class="msg err" id="ie-err"></div>
-      </div>
-    </div>
-
-
-    <!-- Links -->
-    <div class="page" id="page-links">
-      <div class="ph">
-        <div class="ph-title">Links</div>
-        <div class="ph-sub">Full customer details for every activation link. Search, filter, copy links, and deactivate instantly.</div>
-      </div>
-
-      <div class="links-search-bar">
-        <input type="text" id="lk-search" placeholder="Search by name, email, WeChat, package, org ID…" oninput="renderLinks()"/>
-        <button class="btn btn-outline btn-sm" onclick="loadData();renderLinks()">↻ Refresh</button>
-      </div>
-
-      <div class="lk-filter-tabs" id="lk-filters">
-        <button class="fb active" onclick="setLKFilter('all',this)">All</button>
-        <button class="fb" onclick="setLKFilter('active',this)">Active</button>
-        <button class="fb" onclick="setLKFilter('expiring',this)">Expiring Soon</button>
-        <button class="fb" onclick="setLKFilter('expired_sub',this)">Sub Expired</button>
-        <button class="fb" onclick="setLKFilter('pending',this)">Not Submitted</button>
-        <button class="fb" onclick="setLKFilter('deactivated',this)">Deactivated</button>
-      </div>
-
-      <div id="lk-stats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;margin-bottom:1.1rem">
-        <div class="stat"><div class="stat-val" id="lks-all">0</div><div class="stat-lbl">Total</div></div>
-        <div class="stat"><div class="stat-val sv-green" id="lks-act">0</div><div class="stat-lbl">Active</div></div>
-        <div class="stat"><div class="stat-val sv-warn" id="lks-exp">0</div><div class="stat-lbl">Expiring</div></div>
-        <div class="stat"><div class="stat-val sv-ind" id="lks-pend">0</div><div class="stat-lbl">Pending</div></div>
-        <div class="stat"><div class="stat-val sv-red" id="lks-deact">0</div><div class="stat-lbl">Deactivated</div></div>
-      </div>
-
-      <div id="lk-list"><div class="empty">Click Refresh to load.</div></div>
     </div>
 
     <!-- Email -->
@@ -566,29 +428,21 @@
 </div>
 
 <script>
-let adminKey='', allTokens={}, emailLog=[], dashFilter='all', custFilter='all', lkFilter='all';
-let customProducts = [];
-let instrSets = [];
-let editingInstrId = null;
+let adminKey='', allTokens={}, emailLog=[], dashFilter='all', custFilter='all';
 
 // ── Login ────────────────────────────────────────────────────────────────────
 async function login() {
   const key = document.getElementById('admin-key').value.trim();
   if (!key) return;
-  const errEl = document.getElementById('login-err');
-  errEl.classList.remove('show');
   try {
     const r = await fetch('/admin/sessions-data', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ adminKey:key }) });
     const d = await r.json();
-    if (d.error) { errEl.classList.add('show'); return; }
+    if (d.error) { document.getElementById('login-err').classList.add('show'); return; }
     adminKey=key; allTokens=d.tokens; emailLog=d.emailLog||[];
     document.getElementById('login-wrap').style.display='none';
     document.getElementById('app').style.display='flex';
     renderDash(); renderCustomers(); loadEC(); renderEL();
-    try { await loadProductsPage(); } catch(e) {}
-    try { await loadInstrSetsPage(); } catch(e) {}
-    try { updateDeactBadge(); renderLinks(); } catch(e) {}
-  } catch { errEl.classList.add('show'); }
+  } catch { document.getElementById('login-err').classList.add('show'); }
 }
 
 function nav(page, el) {
@@ -605,185 +459,10 @@ async function loadData() {
   if (d.error) return;
   allTokens=d.tokens; emailLog=d.emailLog||[];
   renderDash(); renderCustomers(); renderEL();
-  updateInstrSetSelect();
-  renderLinks();
-  updateDeactBadge();
-}
-
-// ── Products ──────────────────────────────────────────────────────────────────
-async function loadProductsPage() {
-  try {
-    const r = await fetch(`/admin/products?adminKey=${encodeURIComponent(adminKey)}`);
-    const d = await r.json();
-    if (Array.isArray(d)) { customProducts = d; renderProductsList(); updatePackageSelect(); }
-  } catch {}
-}
-
-function renderProductsList() {
-  const wrap = document.getElementById('products-list');
-  if (!wrap) return;
-  if (!customProducts.length) { wrap.innerHTML = '<div class="empty">No products yet. Click + Add Product.</div>'; return; }
-  wrap.innerHTML = customProducts.map((p, i) => `
-    <div style="display:grid;grid-template-columns:1fr 160px 80px auto;gap:.6rem;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border)">
-      <input type="text" value="${esc(p.name)}" placeholder="Product name" oninput="customProducts[${i}].name=this.value;updatePackageSelect()" style="font-size:.82rem;padding:.4rem .65rem"/>
-      <div style="display:flex;align-items:center;gap:.4rem">
-        <input type="number" value="${p.days||30}" min="1" max="3650" oninput="customProducts[${i}].days=parseInt(this.value)||30" style="font-size:.82rem;padding:.4rem .55rem;width:70px"/>
-        <span style="font-size:.72rem;color:var(--muted)">days</span>
-      </div>
-      <div style="font-size:.7rem;color:var(--muted2);text-align:center">
-        <label style="display:flex;align-items:center;gap:.3rem;cursor:pointer;font-size:.68rem;color:var(--muted);font-weight:500;white-space:nowrap" title="Use Session Details field instead of Organization ID">
-          <input type="checkbox" ${p.useSessionField?'checked':''} onchange="customProducts[${i}].useSessionField=this.checked" style="width:13px;height:13px;cursor:pointer"/>
-          Session field
-        </label>
-      </div>
-      <button class="btn btn-outline btn-sm" style="color:var(--error);border-color:var(--error-border)" onclick="removeProduct(${i})">✕</button>
-    </div>`).join('');
-}
-
-function addProduct() {
-  customProducts.push({ id: 'custom-' + Date.now(), name: '', days: 30 });
-  renderProductsList();
-}
-
-function removeProduct(i) {
-  customProducts.splice(i, 1);
-  renderProductsList();
-  updatePackageSelect();
-}
-
-function updatePackageSelect() {
-  const sel = document.getElementById('pkg');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— Select Package —</option>' +
-    customProducts.filter(p=>p.name.trim()).map(p => `<option${cur===p.name?' selected':''}>${esc(p.name)}</option>`).join('');
-  if (cur && [...sel.options].some(o=>o.value===cur)) sel.value = cur;
-}
-
-async function saveProducts() {
-  const valid = customProducts.filter(p=>p.name.trim());
-  const r = await fetch('/admin/products', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ adminKey, products: valid }) });
-  const d = await r.json();
-  showM('prod', d.success, d.success ? '✓ Products saved.' : 'Failed to save.');
-  if (d.success) { customProducts = valid; renderProductsList(); updatePackageSelect(); }
-}
-
-// ── Instruction Sets Library ──────────────────────────────────────────────────
-async function loadInstrSetsPage() {
-  try {
-    const r = await fetch(`/admin/instruction-sets?adminKey=${encodeURIComponent(adminKey)}`);
-    const d = await r.json();
-    if (Array.isArray(d)) { instrSets = d; renderInstrSetsList(); updateInstrSetSelect(); }
-  } catch {}
-}
-
-function renderInstrSetsList() {
-  const wrap = document.getElementById('instr-sets-list');
-  if (!wrap) return;
-  if (!instrSets.length) {
-    wrap.innerHTML = '<div class="empty">No instruction sets yet. Click + New Set to create one.</div>';
-    return;
-  }
-  wrap.innerHTML = instrSets.map((set, i) => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);gap:1rem">
-      <div>
-        <div style="font-weight:600;font-size:.85rem;color:var(--text)">${esc(set.name)}</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem;line-height:1.5">${esc((set.beforeApproval||'').split('\n')[0].replace(/^\d+[\.\)]\s*/,'').slice(0,80))}${(set.beforeApproval||'').length>80?'…':''}</div>
-      </div>
-      <div style="display:flex;gap:.4rem;flex-shrink:0">
-        <button class="btn btn-ghost-blue btn-sm" onclick="editInstrSet(${i})">✏ Edit</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--error);border-color:var(--error-border)" onclick="deleteInstrSet(${i})">✕</button>
-      </div>
-    </div>`).join('');
-}
-
-function updateInstrSetSelect() {
-  const sel = document.getElementById('instr-set');
-  if (!sel) return;
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— No instructions —</option>' +
-    instrSets.map(s => `<option value="${esc(s.id)}"${cur===s.id?' selected':''}>${esc(s.name)}</option>`).join('');
-  if (cur && [...sel.options].some(o=>o.value===cur)) sel.value = cur;
-}
-
-function newInstrSet() {
-  editingInstrId = null;
-  document.getElementById('ie-name').value   = '';
-  document.getElementById('ie-before').value = '';
-  document.getElementById('ie-after').value  = '';
-  document.getElementById('ie-before-preview').innerHTML = '';
-  document.getElementById('ie-after-preview').innerHTML  = '';
-  document.getElementById('instr-editor-title').textContent = 'New instruction set';
-  document.getElementById('instr-editor-card').style.display = '';
-  document.getElementById('ie-ok').classList.remove('show');
-  document.getElementById('ie-err').classList.remove('show');
-  document.getElementById('ie-name').focus();
-}
-
-function editInstrSet(i) {
-  const set = instrSets[i];
-  editingInstrId = set.id;
-  document.getElementById('ie-name').value   = set.name;
-  document.getElementById('ie-before').value = set.beforeApproval || '';
-  document.getElementById('ie-after').value  = set.afterApproval  || '';
-  document.getElementById('instr-editor-title').textContent = 'Edit — ' + set.name;
-  document.getElementById('instr-editor-card').style.display = '';
-  document.getElementById('ie-ok').classList.remove('show');
-  document.getElementById('ie-err').classList.remove('show');
-  updateIEPreview();
-  document.getElementById('instr-editor-card').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function cancelInstrEdit() {
-  document.getElementById('instr-editor-card').style.display = 'none';
-  editingInstrId = null;
-}
-
-function deleteInstrSet(i) {
-  const set = instrSets[i];
-  if (!confirm(`Delete "${set.name}"? This cannot be undone.`)) return;
-  instrSets.splice(i, 1);
-  persistInstrSets();
-}
-
-async function saveInstrSet() {
-  const name   = document.getElementById('ie-name').value.trim();
-  const before = document.getElementById('ie-before').value;
-  const after  = document.getElementById('ie-after').value;
-  if (!name) { showM('ie', false, 'Please enter a name for this instruction set.'); return; }
-  if (editingInstrId) {
-    const idx = instrSets.findIndex(s => s.id === editingInstrId);
-    if (idx >= 0) { instrSets[idx] = { ...instrSets[idx], name, beforeApproval: before, afterApproval: after }; }
-  } else {
-    instrSets.push({ id: 'iset-' + Date.now(), name, beforeApproval: before, afterApproval: after });
-  }
-  await persistInstrSets();
-}
-
-async function persistInstrSets() {
-  const r = await fetch('/admin/instruction-sets', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ adminKey, sets: instrSets }) });
-  const d = await r.json();
-  if (d.success) {
-    renderInstrSetsList(); updateInstrSetSelect();
-    showM('ie', true, '✓ Instruction set saved.');
-    setTimeout(() => { document.getElementById('instr-editor-card').style.display='none'; editingInstrId=null; }, 900);
-  } else { showM('ie', false, 'Failed to save.'); }
-}
-
-function instrLinesToHtml(txt, mode) {
-  const lines = txt.split('\n').filter(l=>l.trim());
-  if (!lines.length) return '<span style="color:var(--muted2);font-style:italic">Start typing…</span>';
-  if (mode==='ol') return '<ol style="padding-left:1.2rem">'+lines.map(l=>`<li>${l.replace(/^\d+[\.\)]\s*/,'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</li>`).join('')+'</ol>';
-  return lines.map((l,i)=>`<div style="display:flex;gap:.5rem;margin-bottom:.28rem"><div style="min-width:20px;height:20px;border-radius:50%;background:var(--blue-light);border:1.5px solid var(--blue-mid);color:var(--blue);font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div><div>${l.replace(/^\d+[\.\)]\s*/,'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div></div>`).join('');
-}
-
-function updateIEPreview() {
-  const b = document.getElementById('ie-before'); if(b) document.getElementById('ie-before-preview').innerHTML = instrLinesToHtml(b.value,'ol');
-  const a = document.getElementById('ie-after');  if(a) document.getElementById('ie-after-preview').innerHTML  = instrLinesToHtml(a.value,'steps');
 }
 
 // ── Status helpers ────────────────────────────────────────────────────────────
 function getLinkStatus(t) {
-  if (t.deactivated) return 'deactivated';
   if (t.declined)  return 'declined';
   if (t.approved)  return 'activated';
   if (t.used)      return 'submitted';
@@ -798,7 +477,7 @@ function getSubStatus(t) {
 }
 function daysUntil(iso){ return Math.ceil((new Date(iso)-new Date())/(1000*60*60*24)); }
 function statusBadge(s) {
-  const m={pending:['b-pend','○ Not Opened'],accessed:['b-acc','◎ Opened'],submitted:['b-sub','⏳ Submitted'],activated:['b-act','✓ Activated'],expired:['b-exp','✕ Expired'],declined:['b-dec','✕ Declined'],deactivated:['b-exp','⊘ Deactivated']};
+  const m={pending:['b-pend','○ Not Opened'],accessed:['b-acc','◎ Opened'],submitted:['b-sub','⏳ Submitted'],activated:['b-act','✓ Activated'],expired:['b-exp','✕ Expired'],declined:['b-dec','✕ Declined']};
   const[c,l]=m[s]||m.pending;
   return `<span class="badge ${c}"><span class="b-dot"></span>${l}</span>`;
 }
@@ -824,39 +503,7 @@ function renderDash() {
   const rows = filtered.map(([token,t,status])=>{
     const subSt = getSubStatus(t);
     const rowCls = subSt==='soon'||subSt==='danger'?'row-expiring':subSt==='expired'?'row-expired-sub':status==='declined'?'row-declined':'';
-
-    // Determine if this token's product uses session field
-    const prod = customProducts.find(p=>p.name===t.packageType);
-    const isSess = !!(prod && prod.useSessionField);
-
-    // Build the ID/session cell
-    let idCell = '<span style="color:var(--muted2);font-size:.65rem">Not submitted</span>';
-    if (isSess && t.sessionDetails) {
-      // Parse and show warnings in admin
-      let warnings = [];
-      let parsedSess = null;
-      try {
-        parsedSess = JSON.parse(t.sessionDetails);
-        const planType  = (parsedSess.planType  || '').toLowerCase();
-        const structure = (parsedSess.structure || '').toLowerCase();
-        if (planType !== 'free') warnings.push(`Plan is "${parsedSess.planType}" (expected free)`);
-        if (structure !== 'personal') warnings.push(`Structure is "${parsedSess.structure}" (expected personal)`);
-      } catch(e) { warnings.push('Invalid JSON'); }
-      const warnHtml = warnings.map(w=>`<div class="sess-warn">⚠ ${esc(w)}</div>`).join('');
-      const previewText = t.sessionDetails.length > 60 ? t.sessionDetails.slice(0,60)+'…' : t.sessionDetails;
-      idCell = `<div>
-        <span class="sess-badge">📋 Session Details</span>
-        <div class="orgid-wrap" style="margin-top:.3rem">
-          <span class="orgid-txt" title="${esc(t.sessionDetails)}">${esc(previewText)}</span>
-          <button class="icopy" onclick="copyText(\`${t.sessionDetails.replace(/`/g,'\`')}\`,this)">Copy</button>
-        </div>
-        ${warnHtml}
-      </div>`;
-    } else if (!isSess && t.orgId) {
-      idCell = `<div class="orgid-wrap"><span class="orgid-txt">${esc(t.orgId)}</span><button class="icopy" onclick="copyText('${esc(t.orgId)}',this)">Copy</button></div>`;
-    } else if (isSess) {
-      idCell = '<span class="sess-badge">📋 Session</span><br><span style="color:var(--muted2);font-size:.65rem">Not submitted</span>';
-    }
+    const org = t.orgId ? `<div class="orgid-wrap"><span class="orgid-txt">${esc(t.orgId)}</span><button class="icopy" onclick="copyText('${esc(t.orgId)}',this)">Copy</button></div>` : '<span style="color:var(--muted2);font-size:.65rem">Not submitted</span>';
 
     // Sub expiry
     let subCell='<span style="color:var(--muted2);font-size:.65rem">—</span>';
@@ -880,7 +527,7 @@ function renderDash() {
     return `<tr class="${rowCls}">
       <td><div class="cust-name">${esc(t.customerName)}</div><div class="cust-meta">${esc(t.packageType)}</div>${t.email?`<div class="cust-meta">${esc(t.email)}</div>`:''}</td>
       <td>${statusBadge(status)}</td>
-      <td>${idCell}</td>
+      <td>${org}</td>
       <td>
         <div class="tl-cell">
           <div class="tl-row"><span class="tl-lbl">Created</span><span class="tl-val">${fmt(t.createdAt)}</span></div>
@@ -904,7 +551,7 @@ function renderDash() {
     </tr>`;
   }).join('');
 
-  wrap.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Customer</th><th>Status</th><th>ID / Session Details</th><th>Timeline</th><th>Subscription</th><th>WeChat</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  wrap.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Customer</th><th>Status</th><th>Organization ID</th><th>Timeline</th><th>Subscription</th><th>WeChat</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 // ── Approve ───────────────────────────────────────────────────────────────────
@@ -975,7 +622,7 @@ function renderCustomers() {
       <div class="cust-grid">
         <div><div class="cf-lbl">Email</div><div class="cf-val">${esc(t.email||'—')}</div></div>
         <div><div class="cf-lbl">WeChat</div><div class="cf-val">${esc(t.wechat||'—')}</div></div>
-        <div><div class="cf-lbl">${(()=>{const pr=customProducts.find(p=>p.name===t.packageType);return pr&&pr.useSessionField?'Session Details':'Organization ID';})()}</div><div style="display:flex;align-items:flex-start;gap:.3rem">${(()=>{const pr=customProducts.find(p=>p.name===t.packageType);if(pr&&pr.useSessionField){const sd=t.sessionDetails||'';return `<div class="cf-val" style="flex:1;font-size:.68rem">${esc(sd.slice(0,30))}${sd.length>30?'…':''}</div>${sd?`<button class="icopy btn-sm" onclick="copyText(\\`${sd.replace(/\`/g,'\\`')}\\`,this)">Copy</button>`:''}`;}else{return `<div class="cf-val" style="flex:1">${esc((t.orgId||'—').slice(0,22))}${t.orgId&&t.orgId.length>22?'…':''}</div>${t.orgId?`<button class="icopy btn-sm" onclick="copyText('${esc(t.orgId)}',this)">Copy</button>`:''}`;}})()} </div></div>
+        <div><div class="cf-lbl">Organization ID</div><div style="display:flex;align-items:flex-start;gap:.3rem"><div class="cf-val" style="flex:1">${esc((t.orgId||'—').slice(0,22))}…</div>${t.orgId?`<button class="icopy btn-sm" onclick="copyText('${esc(t.orgId)}',this)">Copy</button>`:''}</div></div>
         <div><div class="cf-lbl">Activated On</div><div class="cf-val">${t.approvedAt?new Date(t.approvedAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—'}</div></div>
         <div><div class="cf-lbl">Expires On</div><div class="cf-val ${dCls}">${expDate}</div></div>
         <div><div class="cf-lbl">Days Remaining</div><div class="cf-val ${dCls}">${days===null?'—':days<=0?'Expired':days+' days'}</div></div>
@@ -996,227 +643,14 @@ async function sendReminder(token,type){
   if(d.ok)loadData();
 }
 
-
-// ── Links page ────────────────────────────────────────────────────────────────
-function setLKFilter(f, btn) {
-  lkFilter = f;
-  document.querySelectorAll('#lk-filters .fb').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderLinks();
-}
-
-function updateDeactBadge() {
-  const count = Object.values(allTokens).filter(t => t.deactivated).length;
-  const nb = document.getElementById('nb-deact');
-  if (nb) { nb.textContent = count; nb.style.display = count > 0 ? '' : 'none'; }
-}
-
-function renderLinks() {
-  const wrap   = document.getElementById('lk-list');
-  const search = (document.getElementById('lk-search')?.value || '').toLowerCase().trim();
-  const now    = new Date();
-
-  const entries = Object.entries(allTokens)
-    .sort((a, b) => new Date(b[1].createdAt || 0) - new Date(a[1].createdAt || 0));
-
-  // Stats
-  let cAll=0, cAct=0, cExp=0, cPend=0, cDeact=0;
-  entries.forEach(([,t]) => {
-    cAll++;
-    if (t.deactivated) { cDeact++; return; }
-    const sub = t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt) : null;
-    const days = sub ? Math.ceil((sub - now) / 86400000) : null;
-    if (t.approved && days !== null && days > 0) {
-      cAct++;
-      if (days <= 14) cExp++;
-    } else if (!t.used || !t.approved) cPend++;
-  });
-  document.getElementById('lks-all').textContent  = cAll;
-  document.getElementById('lks-act').textContent  = cAct;
-  document.getElementById('lks-exp').textContent  = cExp;
-  document.getElementById('lks-pend').textContent = cPend;
-  document.getElementById('lks-deact').textContent= cDeact;
-
-  // Filter
-  const filtered = entries.filter(([tok, t]) => {
-    const sub  = t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt) : null;
-    const days = sub ? Math.ceil((sub - now) / 86400000) : null;
-    if (lkFilter === 'deactivated') return !!t.deactivated;
-    if (t.deactivated && lkFilter !== 'all') return false;
-    if (lkFilter === 'active')      return t.approved && days !== null && days > 0;
-    if (lkFilter === 'expiring')    return t.approved && days !== null && days > 0 && days <= 14;
-    if (lkFilter === 'expired_sub') return t.approved && days !== null && days <= 0;
-    if (lkFilter === 'pending')     return !t.used || !t.approved;
-    return true;
-  }).filter(([tok, t]) => {
-    if (!search) return true;
-    const haystack = [
-      t.customerName, t.email, t.wechat, t.packageType,
-      t.orgId, t.sessionDetails, tok
-    ].join(' ').toLowerCase();
-    return haystack.includes(search);
-  });
-
-  if (!filtered.length) {
-    wrap.innerHTML = '<div class="empty">No links match your search or filter.</div>';
-    return;
-  }
-
-  wrap.innerHTML = filtered.map(([tok, t]) => {
-    const sub    = t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt) : null;
-    const act    = t.approvedAt ? new Date(t.approvedAt) : null;
-    const days   = sub ? Math.ceil((sub - now) / 86400000) : null;
-    const total  = (act && sub) ? Math.round((sub - act) / 86400000) : null;
-    const pct    = (total && days !== null) ? Math.min(100, Math.max(0, ((total - Math.max(0,days)) / total) * 100)) : 0;
-    const isDeact = !!t.deactivated;
-    const subStatus = !t.approved ? 'none' : (days === null ? 'none' : days <= 0 ? 'expired' : days <= 5 ? 'danger' : days <= 14 ? 'warn' : 'ok');
-    const barColor  = subStatus==='expired'||subStatus==='danger' ? '#dc2626' : subStatus==='warn' ? '#d97706' : '#2563eb';
-
-    // Determine link
-    const proto = window.location.protocol;
-    const host  = window.location.host;
-    const linkUrl = `${proto}//${host}/submit?token=${tok}`;
-
-    // Org / session cell
-    const prod  = customProducts.find(p => p.name === t.packageType);
-    const isSess= !!(prod && prod.useSessionField);
-    let idLabel = isSess ? 'Session Details' : 'Organization ID';
-    let idVal   = '—';
-    if (isSess && t.sessionDetails) {
-      let warns = [];
-      try {
-        const ps = JSON.parse(t.sessionDetails);
-        if ((ps.planType||'').toLowerCase() !== 'free') warns.push('Plan: ' + ps.planType);
-        if ((ps.structure||'').toLowerCase() !== 'personal') warns.push('Structure: ' + ps.structure);
-      } catch(e) {}
-      idVal = (t.sessionDetails.length > 40 ? t.sessionDetails.slice(0,40)+'…' : t.sessionDetails) + (warns.length ? ' ⚠' : '');
-    } else if (!isSess && t.orgId) {
-      idVal = t.orgId;
-    }
-
-    // Card class
-    let cardClass = 'lk-card';
-    if (isDeact) cardClass += ' deactivated';
-    else if (subStatus === 'warn' || subStatus === 'danger') cardClass += ' expiring-soon';
-
-    // Status badge
-    const statusBadgeHtml = isDeact
-      ? '<span class="badge b-exp">⊘ Deactivated</span>'
-      : !t.used ? '<span class="badge b-pend">○ Not submitted</span>'
-      : !t.approved ? '<span class="badge b-sub">⏳ Awaiting approval</span>'
-      : t.declined ? '<span class="badge b-dec">✕ Declined</span>'
-      : days === null ? '<span class="badge b-act">✓ Activated</span>'
-      : days <= 0 ? '<span class="badge b-exp">✕ Sub expired</span>'
-      : days <= 5 ? `<span class="badge" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626">⚠ ${days}d left</span>`
-      : days <= 14 ? `<span class="badge" style="background:#fffbeb;border:1px solid #fde68a;color:#d97706">⏰ ${days}d left</span>`
-      : `<span class="badge b-act">✓ Active · ${days}d left</span>`;
-
-    // Deact button
-    const deactBtn = isDeact
-      ? `<button class="deact-btn deact-state" onclick="toggleDeactivate('${tok}', false)">✓ Reactivate Link</button>`
-      : `<button class="deact-btn active-state" onclick="toggleDeactivate('${tok}', true)">⊘ Deactivate Link</button>`;
-
-    return `<div class="${cardClass}" id="lkcard-${tok}">
-      ${isDeact ? `<div class="deact-banner">⊘ This link has been deactivated${t.deactivatedAt ? ' on ' + fmtFull(new Date(t.deactivatedAt)) : ''}. Customers cannot access it.</div>` : ''}
-
-      <div class="lk-top">
-        <div>
-          <div class="lk-name">${esc(t.customerName)}</div>
-          <div class="lk-pkg">${esc(t.packageType)}${t.instrSetId ? ' · <span style="color:var(--blue);font-size:.68rem">' + esc((instrSets.find(s=>s.id===t.instrSetId)||{name:''}).name) + '</span>' : ''}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
-          ${statusBadgeHtml}
-        </div>
-      </div>
-
-      ${t.approved && sub ? `
-      <div class="sub-bar-wrap">
-        <div class="sub-bar-label">
-          <span>Subscription — started ${act ? act.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—'}</span>
-          <span style="font-weight:600;color:${barColor}">${days !== null && days > 0 ? days+' days left' : days === 0 ? 'Last day' : 'Expired'}</span>
-        </div>
-        <div class="sub-bar"><div class="sub-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);margin-top:.22rem">
-          <span></span>
-          <span>Expires ${sub.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})}</span>
-        </div>
-      </div>` : ''}
-
-      <div class="lk-meta-grid">
-        <div>
-          <div class="lk-field-lbl">Email</div>
-          <div class="lk-field-val${t.email?'':' muted'}">${esc(t.email||'Not submitted')}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">WeChat</div>
-          <div class="lk-field-val${t.wechat?'':' muted'}">${esc(t.wechat||'Not submitted')}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">${idLabel}</div>
-          <div class="lk-field-val${idVal==='—'?' muted':''}" style="font-size:.67rem">${esc(idVal)}${(isSess && t.sessionDetails && idVal!=='—') ? `<button class="icopy" style="margin-left:.3rem;margin-top:.1rem" onclick="copyText(${JSON.stringify(t.sessionDetails)},this)">Copy</button>` : (!isSess && t.orgId ? `<button class="icopy" style="margin-left:.3rem;margin-top:.1rem" onclick="copyText('${esc(t.orgId)}',this)">Copy</button>` : '')}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">Access</div>
-          <div class="lk-field-val">${t.accessCount||0} open${(t.accessCount||0)!==1?'s':''} · ${t.firstAccessedAt ? fmt(t.firstAccessedAt) : 'Never'}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">Created</div>
-          <div class="lk-field-val">${fmt(t.createdAt)}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">Submitted</div>
-          <div class="lk-field-val${t.submittedAt?'':' muted'}">${t.submittedAt ? fmt(t.submittedAt) : '—'}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">Approved</div>
-          <div class="lk-field-val ${t.approvedAt?'green':' muted'}">${t.approvedAt ? fmt(t.approvedAt) : '—'}</div>
-        </div>
-        <div>
-          <div class="lk-field-lbl">Status</div>
-          <div class="lk-field-val">${statusBadgeHtml}</div>
-        </div>
-      </div>
-
-      <div class="lk-link-row">
-        <span class="lk-link-url">${esc(linkUrl)}</span>
-        <button class="copy-btn" onclick="copyText('${esc(linkUrl)}',this)">Copy Link</button>
-      </div>
-
-      <div class="lk-actions">
-        ${deactBtn}
-        ${t.used && !t.approved && !t.declined ? `<button class="approve-btn" onclick="approve('${tok}')">✓ Approve</button><button class="decline-btn" onclick="openDecline('${tok}')">✕ Decline</button>` : ''}
-        ${t.approved && t.email ? `<button class="btn btn-ghost-blue btn-sm" onclick="sendReminder('${tok}','reminder')">📧 5-day Reminder</button>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function toggleDeactivate(token, deactivate) {
-  const r = await fetch('/admin/deactivate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ adminKey, token, deactivate })
-  });
-  const d = await r.json();
-  if (d.success) {
-    allTokens[token].deactivated   = deactivate;
-    allTokens[token].deactivatedAt = deactivate ? new Date().toISOString() : null;
-    renderLinks();
-    updateDeactBadge();
-  } else {
-    alert('Failed. Please try again.');
-  }
-}
-
 // ── Generate ──────────────────────────────────────────────────────────────────
 async function generateLink() {
-  const name       = document.getElementById('cust-name').value.trim();
-  const pkg        = document.getElementById('pkg').value;
-  const instrSetId = document.getElementById('instr-set').value || null;
-  const err        = document.getElementById('gen-err');
+  const name=document.getElementById('cust-name').value.trim();
+  const pkg =document.getElementById('pkg').value;
+  const err =document.getElementById('gen-err');
   err.classList.remove('show');
   if(!name||!pkg){err.textContent='Please fill in both fields.';err.classList.add('show');return;}
-  const r=await fetch('/admin/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,customerName:name,packageType:pkg,instrSetId})});
+  const r=await fetch('/admin/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,customerName:name,packageType:pkg})});
   const d=await r.json();
   if(d.error){err.textContent=d.error;err.classList.add('show');return;}
   document.getElementById('gen-link').textContent=d.link;
