@@ -1,0 +1,89 @@
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-06T10:02:33.000Z
+Customer         : Sarah Chen
+Package          : ChatGPT Free — 1 Month
+── Details ────────────────────────────────────────────
+Session Details  : {"planType":"free","structure":"personal","userId":"user_sChen2025","email":"sarah.chen@gmail.com","created":"2024-11-03T08:00:00.000Z"}
+WeChat           : sarah_chen_wx
+Email            : sarah.chen@gmail.com
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-06T11:34:20.000Z
+Customer         : James Park
+Package          : ChatGPT Free — 1 Month
+── Details ────────────────────────────────────────────
+Session Details  : {"planType":"plus","structure":"personal","userId":"user_jPark88","email":"jpark88@hotmail.com"}
+WeChat           : james_park_88
+Email            : jpark88@hotmail.com
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-06T14:05:44.000Z
+Customer         : Liu Wei
+Package          : ChatGPT Free — 3 Months
+── Details ────────────────────────────────────────────
+Session Details  : {"planType":"free","structure":"team","teamId":"team_corp_88","userId":"user_lwei","email":"liu.wei@corp.cn"}
+WeChat           : liuwei_dtc
+Email            : liu.wei@corp.cn
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-01T08:42:10.000Z
+Customer         : Maria Lopez
+Package          : Claude Pro — 1 Month
+── Details ────────────────────────────────────────────
+Organization ID  : 714fe120-d7yd-4da9-bb53-84c42f10wac7
+WeChat           : maria_lopez_wx
+Email            : maria.lopez@outlook.com
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-03-15T10:28:00.000Z
+Customer         : Ahmed Khan
+Package          : GrokSuper — 3 Months
+── Details ────────────────────────────────────────────
+Organization ID  : 9f3a1c72-8b4e-4d19-a3f5-c2e7b1d09f44
+WeChat           : ahmed_khan_grok
+Email            : ahmed.khan@gmail.com
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-05T14:55:00.000Z
+Customer         : Yuki Tanaka
+Package          : Claude Pro — 3 Months
+── Details ────────────────────────────────────────────
+Organization ID  : xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+WeChat           : yuki_tanaka_jp
+Email            : yuki.tanaka@softbank.jp
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-01-10T09:31:00.000Z
+Customer         : Nina Volkova
+Package          : Claude Pro — 1 Year
+── Details ────────────────────────────────────────────
+Organization ID  : 2d9f4c81-3a7b-4e52-b8d1-f06c5a2e9b73
+WeChat           : nina_volkova_ru
+Email            : nina.volkova@yandex.ru
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-03T12:44:00.000Z
+Customer         : Ben Okafor
+Package          : GrokSuper — 1 Month
+── Details ────────────────────────────────────────────
+Organization ID  : 5e8b3d92-1f4a-4c67-a2e9-8b7d0c5f3a11
+WeChat           : ben_okafor_ng
+Email            : ben.okafor@gmail.com
+══════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════
+Submitted At     : 2025-04-04T08:15:00.000Z
+Customer         : Dmitri Volkov
+Package          : ChatGPT Free — 3 Months
+── Details ────────────────────────────────────────────
+Session Details  : {"planType":"free","structure":"personal","userId":"user_dvolkov99","email":"d.volkov@mail.ru","created":"2023-08-21T00:00:00.000Z"}
+WeChat           : dmitri_v_dtc
+Email            : d.volkov@mail.ru
+══════════════════════════════════════════════════════

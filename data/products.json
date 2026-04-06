@@ -1,0 +1,74 @@
+[
+  {
+    "id": "claude-pro-1m",
+    "name": "Claude Pro — 1 Month",
+    "days": 30,
+    "useSessionField": false
+  },
+  {
+    "id": "claude-pro-3m",
+    "name": "Claude Pro — 3 Months",
+    "days": 90,
+    "useSessionField": false
+  },
+  {
+    "id": "claude-pro-6m",
+    "name": "Claude Pro — 6 Months",
+    "days": 180,
+    "useSessionField": false
+  },
+  {
+    "id": "claude-pro-1y",
+    "name": "Claude Pro — 1 Year",
+    "days": 365,
+    "useSessionField": false
+  },
+  {
+    "id": "groksuper-1m",
+    "name": "GrokSuper — 1 Month",
+    "days": 30,
+    "useSessionField": false
+  },
+  {
+    "id": "groksuper-3m",
+    "name": "GrokSuper — 3 Months",
+    "days": 90,
+    "useSessionField": false
+  },
+  {
+    "id": "groksuper-6m",
+    "name": "GrokSuper — 6 Months",
+    "days": 180,
+    "useSessionField": false
+  },
+  {
+    "id": "groksuper-1y",
+    "name": "GrokSuper — 1 Year",
+    "days": 365,
+    "useSessionField": false
+  },
+  {
+    "id": "chatgpt-free-1m",
+    "name": "ChatGPT Free — 1 Month",
+    "days": 30,
+    "useSessionField": true
+  },
+  {
+    "id": "chatgpt-free-3m",
+    "name": "ChatGPT Free — 3 Months",
+    "days": 90,
+    "useSessionField": true
+  },
+  {
+    "id": "chatgpt-free-6m",
+    "name": "ChatGPT Free — 6 Months",
+    "days": 180,
+    "useSessionField": true
+  },
+  {
+    "id": "custom",
+    "name": "Custom Package",
+    "days": 30,
+    "useSessionField": false
+  }
+]

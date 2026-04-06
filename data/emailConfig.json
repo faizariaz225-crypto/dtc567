@@ -1,0 +1,8 @@
+{
+  "host": "smtp.gmail.com",
+  "port": "587",
+  "user": "your-email@gmail.com",
+  "pass": "",
+  "fromName": "DTC Digital Tools Corner",
+  "secure": false
+}

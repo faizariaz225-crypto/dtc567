@@ -1,0 +1,20 @@
+[
+  {
+    "id": "claude-default",
+    "name": "Claude Pro Instructions",
+    "beforeApproval": "1. Open claude.ai and sign in to your account.\n2. Click your profile icon in the bottom-left corner of the screen.\n3. Select Settings, then click on Account.\n4. Your Organization ID is displayed in UUID format (e.g. 714fe120-d7yd-4da9-bb53-84c42f10wac7).",
+    "afterApproval": "1. Open claude.ai and sign in to your account.\n2. Click your profile icon in the bottom-left corner.\n3. Navigate to Settings \u2192 Billing.\n4. Your plan should now display as **Claude Pro** with an active status.\n5. You can confirm by starting a conversation \u2014 Pro users have access to Claude Opus and extended usage limits."
+  },
+  {
+    "id": "chatgpt-default",
+    "name": "ChatGPT Session Instructions",
+    "beforeApproval": "1. Open chatgpt.com and sign in to your account.\n2. Press F12 to open DevTools, then click the Application tab.\n3. In the left panel, expand Storage \u2192 Cookies \u2192 https://chatgpt.com.\n4. Find the cookie named **__Secure-next-auth.session-token** and copy its full value.\n5. Paste the entire JSON value into the Session Details field below.",
+    "afterApproval": "1. Open chatgpt.com and sign in to your account.\n2. Click your profile icon \u2192 Settings \u2192 My Plan.\n3. Your plan should now display as **ChatGPT Plus** with an active status.\n4. If you do not see the upgrade after 10 minutes, please contact us on WeChat."
+  },
+  {
+    "id": "groksuper-default",
+    "name": "GrokSuper Instructions",
+    "beforeApproval": "1. Open grok.com and sign in to your account.\n2. Click your profile icon in the top-right corner.\n3. Select Settings, then click on Account.\n4. Your Organization ID is displayed under your account details.",
+    "afterApproval": "1. Open grok.com and sign in to your account.\n2. Click your profile icon \u2192 Settings \u2192 Subscription.\n3. Your plan should now display as **GrokSuper** with an active status.\n4. For any assistance, please reach out via WeChat."
+  }
+]
