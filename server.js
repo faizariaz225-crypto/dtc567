@@ -7,41 +7,18 @@ const nodemailer = require('nodemailer');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_KEY      = process.env.ADMIN_KEY || 'dtc2024';
-const DATA_DIR          = path.join(__dirname, 'data');
-const TOKENS_FILE       = path.join(DATA_DIR, 'tokens.json');
-const SESSIONS_FILE     = path.join(DATA_DIR, 'sessions.txt');
-const EMAIL_CONFIG      = path.join(DATA_DIR, 'emailConfig.json');
-const EMAIL_LOG         = path.join(DATA_DIR, 'emailLog.json');
-const PRODUCTS_FILE     = path.join(DATA_DIR, 'products.json');
-const INSTRUCTIONS_FILE    = path.join(DATA_DIR, 'instructions.json');
-const INSTR_SETS_FILE      = path.join(DATA_DIR, 'instructionSets.json');
-const LINK_EXPIRY_MS    = 180 * 24 * 60 * 60 * 1000; // 6 months
+const DATA_DIR       = path.join(__dirname, 'data');
+const TOKENS_FILE    = path.join(DATA_DIR, 'tokens.json');
+const SESSIONS_FILE  = path.join(DATA_DIR, 'sessions.txt');
+const EMAIL_CONFIG   = path.join(DATA_DIR, 'emailConfig.json');
+const EMAIL_LOG      = path.join(DATA_DIR, 'emailLog.json');
+const LINK_EXPIRY_MS = 8 * 60 * 60 * 1000;
 
-const DEFAULT_PRODUCTS = [
-  { id: 'claude-pro-1m',  name: 'Claude Pro — 1 Month',   days: 30  },
-  { id: 'claude-pro-3m',  name: 'Claude Pro — 3 Months',  days: 90  },
-  { id: 'claude-pro-6m',  name: 'Claude Pro — 6 Months',  days: 180 },
-  { id: 'claude-pro-1y',  name: 'Claude Pro — 1 Year',    days: 365 },
-  { id: 'groksuper-1m',   name: 'GrokSuper — 1 Month',    days: 30  },
-  { id: 'groksuper-3m',   name: 'GrokSuper — 3 Months',   days: 90  },
-  { id: 'groksuper-6m',   name: 'GrokSuper — 6 Months',   days: 180 },
-  { id: 'groksuper-1y',   name: 'GrokSuper — 1 Year',     days: 365 },
-  { id: 'custom',         name: 'Custom Package',          days: 30  },
-];
-
-const DEFAULT_INSTRUCTIONS = {
-  beforeApproval: `1. Open claude.ai and sign in to your account.\n2. Click your profile icon in the bottom-left corner of the screen.\n3. Select Settings, then click on Account.\n4. Your Organization ID is displayed in UUID format (e.g. 714fe120-d7yd-4da9-bb53-84c42f10wac7).`,
-  afterApproval:  `1. Open claude.ai and sign in to your account.\n2. Click your profile icon in the bottom-left corner.\n3. Navigate to Settings → Billing.\n4. Your plan should now display as Claude Pro with an active status.\n5. You can confirm by starting a conversation — Pro users have access to Claude Opus and extended usage limits.`
-};
-
-if (!fs.existsSync(DATA_DIR))          fs.mkdirSync(DATA_DIR);
-if (!fs.existsSync(TOKENS_FILE))       fs.writeFileSync(TOKENS_FILE,  JSON.stringify({}));
-if (!fs.existsSync(SESSIONS_FILE))     fs.writeFileSync(SESSIONS_FILE,'');
-if (!fs.existsSync(EMAIL_CONFIG))      fs.writeFileSync(EMAIL_CONFIG, JSON.stringify({}));
-if (!fs.existsSync(EMAIL_LOG))         fs.writeFileSync(EMAIL_LOG,    JSON.stringify([]));
-if (!fs.existsSync(PRODUCTS_FILE))     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(DEFAULT_PRODUCTS, null, 2));
-if (!fs.existsSync(INSTRUCTIONS_FILE)) fs.writeFileSync(INSTRUCTIONS_FILE, JSON.stringify(DEFAULT_INSTRUCTIONS, null, 2));
-if (!fs.existsSync(INSTR_SETS_FILE))    fs.writeFileSync(INSTR_SETS_FILE,    JSON.stringify([], null, 2));
+if (!fs.existsSync(DATA_DIR))     fs.mkdirSync(DATA_DIR);
+if (!fs.existsSync(TOKENS_FILE))  fs.writeFileSync(TOKENS_FILE,  JSON.stringify({}));
+if (!fs.existsSync(SESSIONS_FILE))fs.writeFileSync(SESSIONS_FILE,'');
+if (!fs.existsSync(EMAIL_CONFIG)) fs.writeFileSync(EMAIL_CONFIG, JSON.stringify({}));
+if (!fs.existsSync(EMAIL_LOG))    fs.writeFileSync(EMAIL_LOG,    JSON.stringify([]));
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -52,20 +29,9 @@ function loadEmailCfg() { return JSON.parse(fs.readFileSync(EMAIL_CONFIG, 'utf8'
 function saveEmailCfg(c){ fs.writeFileSync(EMAIL_CONFIG, JSON.stringify(c, null, 2)); }
 function loadEmailLog() { return JSON.parse(fs.readFileSync(EMAIL_LOG,    'utf8')); }
 function saveEmailLog(l){ fs.writeFileSync(EMAIL_LOG,    JSON.stringify(l, null, 2)); }
-function loadProducts()  { return JSON.parse(fs.readFileSync(PRODUCTS_FILE, 'utf8')); }
-function saveProducts(p) { fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(p, null, 2)); }
-function loadInstructions()  { return JSON.parse(fs.readFileSync(INSTRUCTIONS_FILE, 'utf8')); }
-function saveInstructions(i)    { fs.writeFileSync(INSTRUCTIONS_FILE, JSON.stringify(i, null, 2)); }
-function loadInstrSets()        { return JSON.parse(fs.readFileSync(INSTR_SETS_FILE, 'utf8')); }
-function saveInstrSets(sets)    { fs.writeFileSync(INSTR_SETS_FILE, JSON.stringify(sets, null, 2)); }
 function isAdmin(k)     { return k === ADMIN_KEY; }
 
 function getDurationDays(pkg) {
-  // First check custom products list
-  const products = loadProducts();
-  const found = products.find(p => p.name === pkg);
-  if (found && found.days) return found.days;
-  // Fallback legacy logic
   const p = (pkg||'').toLowerCase();
   if (p.includes('1 year') || p.includes('12 month')) return 365;
   if (p.includes('6 month')) return 180;
@@ -193,13 +159,13 @@ setTimeout(checkSubscriptionEmails, 30000);
 
 // ── Generate link ─────────────────────────────────────────────────────────────
 app.post('/admin/generate', (req, res) => {
-  const { adminKey, customerName, packageType, instrSetId } = req.body;
+  const { adminKey, customerName, packageType } = req.body;
   if (!isAdmin(adminKey)) return res.status(401).json({ error: 'Unauthorized' });
   if (!customerName || !packageType) return res.status(400).json({ error: 'Customer name and package are required.' });
   const token     = uuidv4();
   const tokens    = loadTokens();
   const expiresAt = new Date(Date.now() + LINK_EXPIRY_MS).toISOString();
-  tokens[token] = { customerName, packageType, instrSetId: instrSetId||null, createdAt: new Date().toISOString(), expiresAt, used: false, approved: false, declined: false };
+  tokens[token] = { customerName, packageType, createdAt: new Date().toISOString(), expiresAt, used: false, approved: false, declined: false };
   saveTokens(tokens);
   const link = `${req.protocol}://${req.get('host')}/submit?token=${token}`;
   res.json({ link, token, expiresAt });
@@ -221,74 +187,35 @@ app.get('/api/validate-token', (req, res) => {
   t.accessCount     = (t.accessCount || 0) + 1;
   saveTokens(tokens);
 
-  // Determine if this product uses session field
-  const products = loadProducts();
-  const product  = products.find(p => p.name === t.packageType);
-  const useSessionField = !!(product && product.useSessionField);
-
-  if (t.deactivated) return res.status(403).json({ valid: false, error: 'This activation link has been deactivated by the administrator. Please contact support.' });
   if (t.declined) return res.json({ valid: true, declined: true, declineReason: t.declineReason || '', customerName: t.customerName, packageType: t.packageType });
-  if (t.used)     return res.json({ valid: true, submitted: true, approved: t.approved || false, approvedAt: t.approvedAt || null, customerName: t.customerName, packageType: t.packageType, orgId: t.orgId||'', wechat: t.wechat||'', email: t.email||'', sessionDetails: t.sessionDetails||'', useSessionField, subscriptionExpiresAt: t.subscriptionExpiresAt||null });
-  // Only block unsubmitted links that have passed the 6-month window
-  if (!t.used && t.expiresAt && new Date() > new Date(t.expiresAt)) return res.status(410).json({ valid: false, error: 'This activation link has expired. Please contact support for a new link.' });
-  // Resolve instruction set
-  const instrSets = loadInstrSets();
-  const instrSet  = instrSets.find(s => s.id === t.instrSetId) || null;
-  const beforeApproval = instrSet ? instrSet.beforeApproval : (loadInstructions().beforeApproval || '');
-  const afterApproval  = instrSet ? instrSet.afterApproval  : (loadInstructions().afterApproval  || '');
-  res.json({ valid: true, submitted: false, customerName: t.customerName, packageType: t.packageType, useSessionField, beforeApproval, afterApproval });
+  if (t.used)     return res.json({ valid: true, submitted: true, approved: t.approved || false, approvedAt: t.approvedAt || null, customerName: t.customerName, packageType: t.packageType, orgId: t.orgId||'', wechat: t.wechat||'', email: t.email||'', subscriptionExpiresAt: t.subscriptionExpiresAt||null });
+  if (t.expiresAt && new Date() > new Date(t.expiresAt)) return res.status(410).json({ valid: false, error: 'This activation link has expired. Please contact support for a new link.' });
+  res.json({ valid: true, submitted: false, customerName: t.customerName, packageType: t.packageType });
 });
 
 // ── Submit ────────────────────────────────────────────────────────────────────
 app.post('/api/submit', (req, res) => {
-  const { token, orgId, wechat, email, sessionDetails } = req.body;
+  const { token, orgId, wechat, email } = req.body;
   const tokens = loadTokens();
   if (!token || !tokens[token]) return res.status(404).json({ success: false, error: 'Invalid link.' });
   const t = tokens[token];
   if (t.declined) return res.status(410).json({ success: false, error: 'This request has been declined.' });
   if (t.used)     return res.status(410).json({ success: false, error: 'Details already submitted.' });
-  // Only block submission if the link window has expired AND the token has never been used
-  if (!t.used && t.expiresAt && new Date() > new Date(t.expiresAt)) return res.status(410).json({ success: false, error: 'This link has expired.' });
-
-  // Determine field mode from product config
-  const products = loadProducts();
-  const product  = products.find(p => p.name === t.packageType);
-  const useSessionField = !!(product && product.useSessionField);
+  if (t.expiresAt && new Date() > new Date(t.expiresAt)) return res.status(410).json({ success: false, error: 'This link has expired.' });
 
   const UUID_REGEX  = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const errors = {};
-
-  if (useSessionField) {
-    if (!sessionDetails || !sessionDetails.trim()) {
-      errors.sessionDetails = 'Session details are required.';
-    } else {
-      try {
-        const parsed = JSON.parse(sessionDetails.trim());
-        const planType  = (parsed.planType  || '').toLowerCase();
-        const structure = (parsed.structure || '').toLowerCase();
-        if (!planType || !structure) errors.sessionDetails = 'Session details must contain planType and structure fields.';
-        else if (planType !== 'free') errors.sessionDetails = `Invalid plan: "${parsed.planType}". Only Free plan accounts are accepted.`;
-        else if (structure !== 'personal') errors.sessionDetails = `Invalid structure: "${parsed.structure}". Only Personal accounts are accepted.`;
-      } catch(e) {
-        errors.sessionDetails = 'Session details must be valid JSON. Please copy the exact text provided.';
-      }
-    }
-  } else {
-    if (!orgId || !UUID_REGEX.test(orgId.trim()))  errors.orgId  = 'Invalid Organization ID format.';
-  }
+  if (!orgId || !UUID_REGEX.test(orgId.trim()))  errors.orgId  = 'Invalid Organization ID format.';
   if (!wechat || !wechat.trim())                 errors.wechat = 'WeChat ID is required.';
   if (!email  || !EMAIL_REGEX.test(email.trim())) errors.email  = 'Please enter a valid email address.';
   if (Object.keys(errors).length) return res.status(400).json({ success: false, errors });
 
   const timestamp = new Date().toISOString();
-  const detailLine = useSessionField ? `Session Details  : ${sessionDetails.trim()}` : `Organization ID  : ${orgId ? orgId.trim() : ''}`;
-  const entry = ['══════════════════════════════════════════════════════',`Submitted At     : ${timestamp}`,`Customer         : ${t.customerName}`,`Package          : ${t.packageType}`,'── Details ────────────────────────────────────────────',detailLine,`WeChat           : ${wechat.trim()}`,`Email            : ${email.trim()}`,'══════════════════════════════════════════════════════',''].join('\n');
+  const entry = ['══════════════════════════════════════════════════════',`Submitted At     : ${timestamp}`,`Customer         : ${t.customerName}`,`Package          : ${t.packageType}`,'── Details ────────────────────────────────────────────',`Organization ID  : ${orgId.trim()}`,`WeChat           : ${wechat.trim()}`,`Email            : ${email.trim()}`,'══════════════════════════════════════════════════════',''].join('\n');
   fs.appendFileSync(SESSIONS_FILE, entry);
   tokens[token].used = true; tokens[token].submittedAt = timestamp;
-  tokens[token].wechat = wechat.trim(); tokens[token].email = email.trim();
-  if (useSessionField) tokens[token].sessionDetails = sessionDetails.trim();
-  else tokens[token].orgId = orgId ? orgId.trim() : '';
+  tokens[token].orgId = orgId.trim(); tokens[token].wechat = wechat.trim(); tokens[token].email = email.trim();
   saveTokens(tokens);
   res.json({ success: true });
 });
@@ -304,7 +231,6 @@ app.get('/api/status', (req, res) => {
     packageType: t.packageType, customerName: t.customerName,
     approvedAt: t.approvedAt||null, declineReason: t.declineReason||'',
     orgId: t.orgId||'', wechat: t.wechat||'', email: t.email||'',
-    sessionDetails: t.sessionDetails||'',
     subscriptionExpiresAt: t.subscriptionExpiresAt||null
   });
 });
@@ -377,72 +303,6 @@ app.post('/admin/send-reminder', async (req, res) => {
   const html     = type==='expired' ? expiredTemplate({ customerName:t.customerName, packageType:t.packageType }) : reminderTemplate({ customerName:t.customerName, packageType:t.packageType, expiryDate:expiryStr, daysLeft });
   const subject  = type==='expired' ? `Your Claude subscription has expired — DTC` : `Subscription reminder — expires in ${daysLeft} days — DTC`;
   res.json(await sendEmail({ to: t.email, subject, html, type:'manual_'+type, token }));
-});
-
-// ── Products ──────────────────────────────────────────────────────────────────
-app.get('/admin/products', (req, res) => {
-  if (!isAdmin(req.query.adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  res.json(loadProducts());
-});
-app.post('/admin/products', (req, res) => {
-  const { adminKey, products } = req.body;
-  if (!isAdmin(adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  if (!Array.isArray(products)) return res.status(400).json({ error: 'Invalid data.' });
-  saveProducts(products);
-  res.json({ success: true });
-});
-
-// ── Instructions ──────────────────────────────────────────────────────────────
-app.get('/admin/instructions', (req, res) => {
-  if (!isAdmin(req.query.adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  res.json(loadInstructions());
-});
-app.post('/admin/instructions', (req, res) => {
-  const { adminKey, instructions } = req.body;
-  if (!isAdmin(adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  if (!instructions || typeof instructions !== 'object') return res.status(400).json({ error: 'Invalid data.' });
-  saveInstructions(instructions);
-  res.json({ success: true });
-});
-
-// Public endpoint for form to fetch instructions
-app.get('/api/instructions', (req, res) => {
-  res.json(loadInstructions());
-});
-
-// Public endpoint for form to fetch products (so form knows product name display)
-app.get('/api/products', (req, res) => {
-  res.json(loadProducts());
-});
-
-// ── Instruction Sets ─────────────────────────────────────────────────────────
-app.get('/admin/instruction-sets', (req, res) => {
-  if (!isAdmin(req.query.adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  res.json(loadInstrSets());
-});
-app.post('/admin/instruction-sets', (req, res) => {
-  const { adminKey, sets } = req.body;
-  if (!isAdmin(adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  if (!Array.isArray(sets)) return res.status(400).json({ error: 'Invalid data.' });
-  saveInstrSets(sets);
-  res.json({ success: true });
-});
-
-// Public: return all instruction sets (form uses token's instrSetId to pick the right one)
-app.get('/api/instruction-sets', (req, res) => {
-  res.json(loadInstrSets());
-});
-
-// ── Admin: deactivate / reactivate link ───────────────────────────────────────
-app.post('/admin/deactivate', (req, res) => {
-  const { adminKey, token, deactivate } = req.body;
-  if (!isAdmin(adminKey)) return res.status(401).json({ error: 'Unauthorized' });
-  const tokens = loadTokens();
-  if (!tokens[token]) return res.status(404).json({ error: 'Not found.' });
-  tokens[token].deactivated = !!deactivate;
-  tokens[token].deactivatedAt = deactivate ? new Date().toISOString() : null;
-  saveTokens(tokens);
-  res.json({ success: true });
 });
 
 // ── Pages ─────────────────────────────────────────────────────────────────────
