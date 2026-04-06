@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — DTC Digital Tools Corner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#f0f4ff;
+      --white:#ffffff;
+      --sidebar:#1e293b;
+      --sidebar-hover:rgba(255,255,255,.07);
+      --sidebar-active:rgba(37,99,235,.25);
+      --blue:#2563eb;
+      --blue-dark:#1d4ed8;
+      --blue-light:#eff6ff;
+      --blue-mid:#dbeafe;
+      --border:#e2e8f0;
+      --border2:#cbd5e1;
+      --text:#1e293b;
+      --muted:#64748b;
+      --muted2:#94a3b8;
+      --success:#16a34a;
+      --success-bg:#f0fdf4;
+      --success-border:#bbf7d0;
+      --error:#dc2626;
+      --error-bg:#fef2f2;
+      --error-border:#fecaca;
+      --warn:#d97706;
+      --warn-bg:#fffbeb;
+      --warn-border:#fde68a;
+      --shadow:0 1px 3px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.04);
+      --shadow-md:0 4px 16px rgba(0,0,0,.08);
+      --sidebar-w:240px;
+    }
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;font-size:14px}
+
+    /* ── Sidebar ── */
+    .sidebar{width:var(--sidebar-w);background:var(--sidebar);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .25s}
+    .sb-brand{padding:1.4rem 1.2rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.08)}
+    .sb-logo{display:flex;align-items:center;gap:.6rem;margin-bottom:.1rem}
+    .sb-icon{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .sb-icon svg{width:17px;height:17px}
+    .sb-name{font-size:1rem;font-weight:700;color:#fff;letter-spacing:-.02em}
+    .sb-tag{font-size:.62rem;color:rgba(255,255,255,.4);margin-top:.08rem}
+    .nav{flex:1;padding:.8rem 0;overflow-y:auto}
+    .nav-sec{font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.6rem 1.2rem .25rem}
+    .nav-item{display:flex;align-items:center;gap:.6rem;padding:.58rem 1.2rem;font-size:.82rem;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;border-left:2px solid transparent;user-select:none}
+    .nav-item:hover{color:rgba(255,255,255,.85);background:var(--sidebar-hover)}
+    .nav-item.active{color:#fff;background:var(--sidebar-active);border-left-color:var(--blue)}
+    .nav-item .icon{font-size:.9rem;width:18px;text-align:center;flex-shrink:0}
+    .nav-badge{margin-left:auto;background:rgba(217,119,6,.2);border:1px solid rgba(217,119,6,.3);border-radius:99px;font-size:.6rem;font-family:'JetBrains Mono',monospace;padding:.1rem .45rem;color:#fbbf24;font-weight:600}
+    .sb-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,255,255,.07);font-size:.63rem;color:rgba(255,255,255,.25)}
+
+    /* ── Main ── */
+    .main{margin-left:var(--sidebar-w);flex:1;padding:2rem 2rem 5rem;min-width:0}
+    @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:none}.main{margin-left:0;padding:1.2rem 1rem 4rem}.mob-btn{display:flex!important}}
+
+    .mob-btn{display:none;align-items:center;gap:.5rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.45rem .8rem;font-size:.8rem;color:var(--muted);cursor:pointer;margin-bottom:1.4rem;box-shadow:var(--shadow)}
+
+    .page{display:none}.page.active{display:block}
+
+    /* Page header */
+    .ph{margin-bottom:1.8rem}
+    .ph-title{font-size:1.4rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
+    .ph-sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+
+    /* Cards */
+    .card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+    .card-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between}
+
+    /* Login */
+    #login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);width:100%;padding:2rem 1rem}
+    .login-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:380px;box-shadow:var(--shadow-md)}
+    .login-card .top{display:flex;align-items:center;gap:.7rem;margin-bottom:1.8rem}
+
+    /* Forms */
+    label{display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.38rem}
+    input,select,textarea{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:.65rem .9rem;font-family:'Inter',sans-serif;font-size:.86rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    input::placeholder,textarea::placeholder{color:var(--muted2)}
+    select option{background:var(--white)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem}
+    .form-group{margin-bottom:.9rem}
+    @media(max-width:560px){.form-row{grid-template-columns:1fr}}
+
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.58rem 1.2rem;border-radius:8px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .18s;white-space:nowrap;letter-spacing:.01em}
+    .btn:hover:not(:disabled){transform:translateY(-1px)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-primary{background:var(--blue);color:#fff}.btn-primary:hover:not(:disabled){background:var(--blue-dark);box-shadow:0 4px 14px rgba(37,99,235,.3)}
+    .btn-success{background:#15803d;color:#fff}.btn-success:hover:not(:disabled){background:#166534;box-shadow:0 4px 14px rgba(22,163,74,.25)}
+    .btn-danger{background:var(--error);color:#fff}.btn-danger:hover:not(:disabled){background:#b91c1c;box-shadow:0 4px 14px rgba(220,38,38,.25)}
+    .btn-outline{background:var(--white);border:1.5px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--border2);background:#f8fafc}
+    .btn-ghost-blue{background:var(--blue-light);border:1.5px solid var(--blue-mid);color:var(--blue)}.btn-ghost-blue:hover{background:#dbeafe}
+    .btn-sm{padding:.28rem .7rem;font-size:.72rem}
+
+    /* Link result */
+    .link-result{display:none;margin-top:1rem;background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:.9rem 1rem}
+    .link-result.show{display:block}
+    .lr-label{font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--success);font-weight:700;margin-bottom:.45rem}
+    .lr-row{display:flex;align-items:center;gap:.5rem}
+    .lr-text{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .copy-btn{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:.22rem .55rem;font-size:.66rem;font-family:'Inter',sans-serif;color:var(--muted);cursor:pointer;transition:all .18s;flex-shrink:0;font-weight:600}
+    .copy-btn:hover,.copy-btn.done{border-color:var(--success);color:var(--success);background:var(--success-bg)}
+    .lr-note{font-size:.68rem;color:var(--muted);margin-top:.5rem}
+
+    /* Stats */
+    .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;margin-bottom:1.3rem}
+    @media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
+    .stat{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;box-shadow:var(--shadow)}
+    .stat-val{font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text)}
+    .stat-lbl{font-size:.61rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:.1rem;font-weight:500}
+    .sv-blue{color:var(--blue)}.sv-warn{color:var(--warn)}.sv-green{color:var(--success)}.sv-red{color:var(--error)}.sv-ind{color:#6366f1}
+
+    /* Filter tabs */
+    .filters{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem}
+    .fb{padding:.28rem .8rem;border-radius:6px;font-size:.72rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Inter',sans-serif;transition:all .18s}
+    .fb:hover{border-color:var(--border2);color:var(--text);background:#f8fafc}
+    .fb.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+    /* Table */
+    .tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+    table{width:100%;border-collapse:collapse;font-size:.78rem}
+    thead{background:#f8fafc}
+    thead tr{border-bottom:1px solid var(--border)}
+    th{text-align:left;font-size:.62rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);padding:.55rem .75rem;font-weight:600;white-space:nowrap}
+    td{padding:.72rem .75rem;border-bottom:1px solid var(--border);vertical-align:top;background:var(--white)}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:#fafbff}
+    tr.row-expiring td{background:#fffbeb}
+    tr.row-expired-sub td{background:#fff8f8}
+    tr.row-declined td{background:#fff5f5}
+
+    /* Badges */
+    .badge{display:inline-flex;align-items:center;gap:.27rem;padding:.18rem .6rem;border-radius:99px;font-size:.63rem;font-weight:600;white-space:nowrap}
+    .b-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+    .b-pend{background:#f1f5f9;border:1px solid #e2e8f0;color:var(--muted)}
+    .b-acc{background:var(--blue-light);border:1px solid var(--blue-mid);color:var(--blue)}
+    .b-sub{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn)}
+    .b-act{background:var(--success-bg);border:1px solid var(--success-border);color:var(--success)}
+    .b-exp{background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
+    .b-dec{background:#fdf4ff;border:1px solid #e9d5ff;color:#7c3aed}
+
+    /* Cells */
+    .cust-name{font-weight:600;font-size:.82rem;color:var(--text);margin-bottom:.12rem}
+    .cust-meta{font-size:.68rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:.08rem}
+
+    .orgid-wrap{display:flex;align-items:flex-start;gap:.35rem}
+    .orgid-txt{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--text);word-break:break-all;line-height:1.55;flex:1}
+    .icopy{background:none;border:1.5px solid var(--border);border-radius:5px;padding:.12rem .42rem;font-size:.6rem;font-family:'Inter',sans-serif;color:var(--muted);cursor:pointer;transition:all .18s;flex-shrink:0;margin-top:1px;font-weight:600}
+    .icopy:hover,.icopy.done{border-color:var(--success);color:var(--success);background:var(--success-bg)}
+
+    .tl-cell{font-size:.65rem;color:var(--muted);line-height:1.7}
+    .tl-row{display:flex;gap:.4rem}.tl-lbl{color:var(--muted2);min-width:52px;flex-shrink:0;font-weight:500}.tl-val{color:var(--text)}
+    .tl-val.green{color:var(--success)}.tl-val.red{color:var(--error)}
+
+    .acount{display:inline-block;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:4px;padding:.08rem .4rem;font-size:.61rem;font-family:'JetBrains Mono',monospace;color:var(--blue);margin-top:.25rem}
+    .acount.zero{background:#f1f5f9;border-color:var(--border);color:var(--muted2)}
+
+    .xbtn{background:none;border:none;color:var(--blue);cursor:pointer;font-size:.67rem;font-family:'Inter',sans-serif;padding:0;font-weight:500;display:block;margin-top:.22rem;transition:color .15s}
+    .xbtn:hover{color:var(--blue-dark);text-decoration:underline}
+    .log-row{display:none;background:#f8faff}.log-row.open{display:table-row}
+    .log-inner{padding:.65rem .75rem .65rem 1.8rem;font-size:.63rem;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border)}
+    .log-hdr{display:grid;grid-template-columns:140px 110px 1fr;gap:.4rem;font-size:.58rem;color:var(--muted);padding-bottom:.25rem;border-bottom:1px solid var(--border);margin-bottom:.2rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+    .log-entry{display:grid;grid-template-columns:140px 110px 1fr;gap:.4rem;padding:.25rem 0;border-bottom:1px solid #f1f5f9;color:var(--muted)}
+    .log-entry:last-child{border-bottom:none}
+    .le-t{color:var(--text)}.le-ip{color:var(--muted)}.le-ua{color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* Sub expiry cell */
+    .sub-exp{font-size:.7rem;line-height:1.6}
+    .sub-exp .days{font-weight:700;margin-bottom:.05rem}
+    .sub-exp.ok .days{color:var(--success)}
+    .sub-exp.soon .days{color:var(--warn)}
+    .sub-exp.danger .days{color:var(--error)}
+    .sub-exp .date{color:var(--muted);font-size:.66rem;font-family:'JetBrains Mono',monospace}
+    .exp-flag{display:inline-block;border-radius:4px;font-size:.6rem;font-weight:600;padding:.07rem .4rem;margin-top:.15rem}
+    .exp-flag.soon{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn)}
+    .exp-flag.danger{background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
+
+    /* Action buttons */
+    .action-wrap{display:flex;flex-direction:column;gap:.4rem}
+    .approve-btn{background:var(--success-bg);border:1.5px solid var(--success-border);border-radius:7px;padding:.3rem .75rem;font-family:'Inter',sans-serif;font-size:.73rem;font-weight:700;color:var(--success);cursor:pointer;transition:all .18s;white-space:nowrap}
+    .approve-btn:hover:not(:disabled){background:#dcfce7;border-color:#86efac;transform:translateY(-1px)}
+    .approve-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .decline-btn{background:var(--error-bg);border:1.5px solid var(--error-border);border-radius:7px;padding:.3rem .75rem;font-family:'Inter',sans-serif;font-size:.73rem;font-weight:700;color:var(--error);cursor:pointer;transition:all .18s;white-space:nowrap}
+    .decline-btn:hover:not(:disabled){background:#fee2e2;border-color:#fca5a5;transform:translateY(-1px)}
+    .approved-ts{font-size:.62rem;color:var(--success);font-family:'JetBrains Mono',monospace;margin-top:.2rem}
+    .declined-ts{font-size:.62rem;color:var(--error);font-family:'JetBrains Mono',monospace;margin-top:.2rem}
+
+    /* Customer cards */
+    .cust-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:1.3rem 1.5rem;margin-bottom:.9rem;box-shadow:var(--shadow);transition:all .2s}
+    .cust-card:hover{box-shadow:var(--shadow-md)}
+    .cust-card.expiring{border-color:var(--warn-border);background:var(--warn-bg)}
+    .cust-card.expired-sub{border-color:var(--error-border);background:var(--error-bg)}
+    .cust-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.9rem;flex-wrap:wrap}
+    .cust-nm{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
+    .cust-pk{font-size:.76rem;color:var(--muted);font-weight:500}
+    .cust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem .9rem;margin-bottom:.9rem}
+    @media(max-width:560px){.cust-grid{grid-template-columns:1fr 1fr}}
+    .cf-lbl{font-size:.61rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.12rem;font-weight:600}
+    .cf-val{font-size:.75rem;font-family:'JetBrains Mono',monospace;color:var(--text);word-break:break-all}
+    .cf-val.green{color:var(--success)}.cf-val.warn{color:var(--warn)}.cf-val.red{color:var(--error)}
+    .exp-bar-wrap{margin-bottom:.9rem}
+    .exp-bar-label{display:flex;justify-content:space-between;font-size:.64rem;color:var(--muted);margin-bottom:.3rem;font-weight:500}
+    .exp-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+    .exp-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
+    .email-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+
+    /* Email config */
+    .provider-btns{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem}
+    .gmail-guide{display:none;background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1.2rem;font-size:.79rem;line-height:1.75;color:var(--muted)}
+    .toggle{display:flex;align-items:center;gap:.6rem;cursor:pointer}
+    .toggle input{display:none}
+    .toggle-track{width:36px;height:20px;background:var(--border);border-radius:99px;position:relative;transition:background .2s}
+    .toggle input:checked ~ .toggle-track{background:var(--blue)}
+    .toggle-thumb{width:14px;height:14px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+    .toggle input:checked ~ .toggle-track .toggle-thumb{left:19px}
+    .email-log-tbl{width:100%;border-collapse:collapse;font-size:.72rem}
+    .email-log-tbl th{text-align:left;font-size:.61rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:.4rem .6rem;font-weight:600;background:#f8fafc;border-bottom:1px solid var(--border)}
+    .email-log-tbl td{padding:.55rem .6rem;border-bottom:1px solid var(--border);color:var(--muted)}
+    .email-log-tbl tr:last-child td{border-bottom:none}
+    .email-log-tbl tr:hover td{background:#f8fafc}
+
+    /* Decline modal */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--white);border-radius:14px;padding:1.8rem;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:fadeUp .2s ease}
+    .modal-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:.4rem}
+    .modal-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
+    .modal-actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.3rem}
+
+    /* Messages */
+    .msg{font-size:.78rem;padding:.55rem .85rem;border-radius:8px;margin-top:.7rem;display:none;font-weight:500}
+    .msg.show{display:block}
+    .msg.ok{background:var(--success-bg);border:1px solid var(--success-border);color:var(--success)}
+    .msg.err{background:var(--error-bg);border:1px solid var(--error-border);color:var(--error)}
+    .empty{text-align:center;color:var(--muted);font-size:.82rem;padding:2.5rem 0}
+
+    .prod-grid-hdr{display:grid;grid-template-columns:1fr 160px 80px auto;gap:.6rem;font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:.3rem 0;border-bottom:1px solid var(--border);margin-bottom:.1rem}
+    .sess-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .55rem;border-radius:5px;font-size:.64rem;font-weight:600;background:#fdf4ff;border:1px solid #e9d5ff;color:#7c3aed;white-space:nowrap}
+    .sess-warn{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn);border-radius:7px;padding:.4rem .7rem;font-size:.72rem;font-weight:500;display:flex;align-items:flex-start;gap:.4rem;margin-top:.25rem;line-height:1.5}
+
+
+    /* ── Links page ── */
+    .links-search-bar{display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+    .links-search-bar input{flex:1;min-width:160px;padding:.52rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;transition:border-color .2s}
+    .links-search-bar input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+    .lk-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:.75rem;box-shadow:var(--shadow);transition:border-color .2s}
+    .lk-card.deactivated{border-color:var(--error-border);background:var(--error-bg);opacity:.85}
+    .lk-card.expiring-soon{border-color:var(--warn-border);background:var(--warn-bg)}
+    .lk-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem}
+    .lk-name{font-size:.95rem;font-weight:700;color:var(--text)}
+    .lk-pkg{font-size:.74rem;color:var(--muted);margin-top:.12rem}
+    .lk-meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem .8rem;margin-bottom:.85rem}
+    @media(max-width:700px){.lk-meta-grid{grid-template-columns:1fr 1fr}}
+    .lk-field-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.1rem;font-weight:600}
+    .lk-field-val{font-size:.74rem;font-family:'JetBrains Mono',monospace;color:var(--text);word-break:break-all;line-height:1.45}
+    .lk-field-val.muted{color:var(--muted2);font-family:'Inter',sans-serif}
+    .lk-field-val.green{color:var(--success)}
+    .lk-field-val.warn{color:var(--warn)}
+    .lk-field-val.red{color:var(--error)}
+    .lk-link-row{display:flex;align-items:center;gap:.5rem;background:#f8faff;border:1px solid var(--blue-mid);border-radius:8px;padding:.5rem .75rem;margin-bottom:.8rem}
+    .lk-link-url{font-family:'JetBrains Mono',monospace;font-size:.67rem;color:var(--blue);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .lk-actions{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center}
+    .deact-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.32rem .75rem;border-radius:7px;font-size:.73rem;font-weight:700;cursor:pointer;border:1.5px solid;transition:all .18s;white-space:nowrap;font-family:'Inter',sans-serif}
+    .deact-btn.active-state{background:var(--error-bg);border-color:var(--error-border);color:var(--error)}
+    .deact-btn.active-state:hover{background:#fee2e2;border-color:#fca5a5}
+    .deact-btn.deact-state{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
+    .deact-btn.deact-state:hover{background:#dcfce7;border-color:#86efac}
+    .deact-banner{background:var(--error-bg);border:1px solid var(--error-border);border-radius:8px;padding:.55rem .85rem;display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--error);font-weight:600;margin-bottom:.7rem}
+    .sub-bar-wrap{margin-bottom:.85rem}
+    .sub-bar-label{display:flex;justify-content:space-between;font-size:.64rem;color:var(--muted);margin-bottom:.28rem;font-weight:500}
+    .sub-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+    .sub-bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
+    .lk-filter-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.9rem}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-wrap">
+  <div class="login-card">
+    <div class="top">
+      <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div><div style="font-size:1.05rem;font-weight:700;color:var(--text)">DTC</div><div style="font-size:.7rem;color:var(--muted)">Digital Tools Corner — Admin</div></div>
+    </div>
+    <div class="form-group">
+      <label>Admin Key</label>
+      <input type="password" id="admin-key" placeholder="Enter your admin key…" onkeydown="if(event.key==='Enter')login()"/>
+    </div>
+    <button class="btn btn-primary" style="width:100%;padding:.72rem" onclick="login()">Sign In →</button>
+    <div class="msg err" id="login-err">Incorrect admin key. Please try again.</div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" style="display:none;width:100%">
+
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">
+        <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="sb-name">DTC</div>
+      </div>
+      <div class="sb-tag">Digital Tools Corner</div>
+    </div>
+    <div class="nav">
+      <div class="nav-sec">Main</div>
+      <div class="nav-item active" onclick="nav('dashboard',this)"><span class="icon">⚡</span>Dashboard</div>
+      <div class="nav-item" onclick="nav('customers',this)"><span class="icon">👤</span>Customers<span class="nav-badge" id="nb-exp" style="display:none">0</span></div>
+      <div class="nav-item" onclick="nav('links',this)"><span class="icon">🔗</span>Links<span class="nav-badge" id="nb-deact" style="display:none">0</span></div>
+      <div class="nav-sec" style="margin-top:.5rem">Settings</div>
+      <div class="nav-item" onclick="nav('products',this)"><span class="icon">📦</span>Custom Products</div>
+      <div class="nav-item" onclick="nav('instrsets',this)"><span class="icon">📋</span>Instructions Library</div>
+      <div class="nav-item" onclick="nav('email',this)"><span class="icon">✉</span>Email Config</div>
+    </div>
+    <div class="sb-footer">Admin Panel v3.0</div>
+  </nav>
+
+  <main class="main">
+    <button class="mob-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+
+    <!-- Dashboard -->
+    <div class="page active" id="page-dashboard">
+      <div class="ph"><div class="ph-title">Dashboard</div><div class="ph-sub">Manage activation links and review customer submissions.</div></div>
+
+      <div class="card">
+        <div class="card-title">Generate Activation Link</div>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0"><label>Customer Name</label><input type="text" id="cust-name" placeholder="e.g. Ahmed Khan"/></div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Package</label>
+            <select id="pkg">
+              <option value="">— Select Package —</option>
+              <option>Claude Pro — 1 Month</option><option>Claude Pro — 3 Months</option>
+              <option>Claude Pro — 6 Months</option><option>Claude Pro — 1 Year</option>
+              <option>GrokSuper — 1 Month</option><option>GrokSuper — 3 Months</option>
+              <option>GrokSuper — 6 Months</option><option>GrokSuper — 1 Year</option>
+              <option>Custom Package</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:.7rem">
+          <div class="form-group" style="margin-bottom:0">
+            <label>Instructions Set <span style="font-weight:400;color:var(--muted2)">(shown to customer)</span></label>
+            <select id="instr-set">
+              <option value="">— No instructions —</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:.8rem" onclick="generateLink()">⚡ Generate Link</button>
+        <div class="msg err" id="gen-err"></div>
+        <div class="link-result" id="link-result">
+          <div class="lr-label">✓ Link Ready — Share with customer</div>
+          <div class="lr-row"><span class="lr-text" id="gen-link"></span><button class="copy-btn" id="copy-btn" onclick="copyGenLink()">Copy</button></div>
+          <div class="lr-note">✓ This link is valid for <strong>6 months</strong>. The customer can return to it any time to check their subscription status.</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="s-all">0</div><div class="stat-lbl">Total Links</div></div>
+        <div class="stat"><div class="stat-val sv-ind" id="s-pend">0</div><div class="stat-lbl">Not Opened</div></div>
+        <div class="stat"><div class="stat-val sv-blue" id="s-acc">0</div><div class="stat-lbl">Opened</div></div>
+        <div class="stat"><div class="stat-val sv-warn" id="s-sub">0</div><div class="stat-lbl">Submitted</div></div>
+        <div class="stat"><div class="stat-val sv-green" id="s-act">0</div><div class="stat-lbl">Activated</div></div>
+        <div class="stat"><div class="stat-val sv-red" id="s-exp">0</div><div class="stat-lbl">Expired / Declined</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>All Links</span><button class="btn btn-outline btn-sm" onclick="loadData()">↻ Refresh</button></div>
+        <div class="filters" id="df">
+          <button class="fb active" onclick="setFilter('all',this)">All</button>
+          <button class="fb" onclick="setFilter('pending',this)">Not Opened</button>
+          <button class="fb" onclick="setFilter('accessed',this)">Opened</button>
+          <button class="fb" onclick="setFilter('submitted',this)">Submitted</button>
+          <button class="fb" onclick="setFilter('activated',this)">Activated</button>
+          <button class="fb" onclick="setFilter('declined',this)">Declined</button>
+          <button class="fb" onclick="setFilter('expired',this)">Expired</button>
+        </div>
+        <div id="dash-tbl"><div class="empty">Click Refresh to load data.</div></div>
+      </div>
+    </div>
+
+    <!-- Customers -->
+    <div class="page" id="page-customers">
+      <div class="ph"><div class="ph-title">Customer Details</div><div class="ph-sub">Subscription status, expiry tracking and communication for all activated customers.</div></div>
+      <div class="filters" id="cf" style="margin-bottom:1.2rem">
+        <button class="fb active" onclick="setCF('all',this)">All</button>
+        <button class="fb" onclick="setCF('active',this)">Active</button>
+        <button class="fb" onclick="setCF('expiring',this)">Expiring Soon</button>
+        <button class="fb" onclick="setCF('expired',this)">Expired</button>
+      </div>
+      <div id="cust-list"><div class="empty">Loading…</div></div>
+    </div>
+
+    <!-- Products -->
+    <div class="page" id="page-products">
+      <div class="ph"><div class="ph-title">Custom Products</div><div class="ph-sub">Define the packages available when generating activation links. Changes apply immediately.</div></div>
+      <div class="card">
+        <div class="card-title"><span>Product List</span><button class="btn btn-primary btn-sm" onclick="addProduct()">+ Add Product</button></div>
+        <div class="prod-grid-hdr"><span>Product Name</span><span>Duration</span><span>Session Field</span><span></span></div>
+        <div id="products-list"></div>
+        <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn btn-success" onclick="saveProducts()">✓ Save Products</button>
+          <button class="btn btn-outline" onclick="loadProductsPage()">↻ Reset</button>
+        </div>
+        <div class="msg ok" id="prod-ok"></div><div class="msg err" id="prod-err"></div>
+      </div>
+    </div>
+
+    <!-- Instructions Library -->
+    <div class="page" id="page-instrsets">
+      <div class="ph"><div class="ph-title">Instructions Library</div><div class="ph-sub">Create named instruction sets and select one when generating a link. Each customer sees exactly the right steps for their product.</div></div>
+      <div class="card">
+        <div class="card-title"><span>Saved instruction sets</span><button class="btn btn-primary btn-sm" onclick="newInstrSet()">+ New Set</button></div>
+        <div id="instr-sets-list"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card" id="instr-editor-card" style="display:none">
+        <div class="card-title" id="instr-editor-title">Edit instruction set</div>
+        <div class="form-group">
+          <label>Set Name <span style="font-weight:400;color:var(--muted2)">(e.g. "ChatGPT Instructions")</span></label>
+          <input type="text" id="ie-name" placeholder="e.g. Claude Pro Instructions"/>
+        </div>
+        <div class="form-group">
+          <label>Before approval — what to show on the submission form</label>
+          <p style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem">One step per line. Use **bold** for emphasis.</p>
+          <textarea id="ie-before" rows="6" oninput="updateIEPreview()" placeholder="1. Open claude.ai and sign in.&#10;2. Click your profile icon → Settings → Account.&#10;3. Copy your Organization ID."></textarea>
+        </div>
+        <div class="form-group" style="margin-top:-.2rem">
+          <label style="font-size:.68rem;color:var(--muted2);font-weight:400">Preview</label>
+          <div id="ie-before-preview" style="background:#f8faff;border:1px solid var(--blue-mid);border-radius:8px;padding:.75rem 1rem;font-size:.77rem;color:var(--muted);line-height:1.8;min-height:44px"></div>
+        </div>
+        <div class="form-group" style="margin-top:.3rem">
+          <label>After approval — verification steps shown on the success screen</label>
+          <p style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem">One step per line. Use **bold** for emphasis.</p>
+          <textarea id="ie-after" rows="5" oninput="updateIEPreview()" placeholder="1. Open claude.ai and sign in.&#10;2. Go to Settings → Billing.&#10;3. Your plan should show as Claude Pro."></textarea>
+        </div>
+        <div class="form-group" style="margin-top:-.2rem">
+          <label style="font-size:.68rem;color:var(--muted2);font-weight:400">Preview</label>
+          <div id="ie-after-preview" style="background:#f8faff;border:1px solid var(--blue-mid);border-radius:8px;padding:.75rem 1rem;font-size:.77rem;color:var(--muted);line-height:1.8;min-height:44px"></div>
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.4rem">
+          <button class="btn btn-success" onclick="saveInstrSet()">✓ Save Set</button>
+          <button class="btn btn-outline" onclick="cancelInstrEdit()">Cancel</button>
+        </div>
+        <div class="msg ok" id="ie-ok"></div><div class="msg err" id="ie-err"></div>
+      </div>
+    </div>
+
+
+    <!-- Links -->
+    <div class="page" id="page-links">
+      <div class="ph">
+        <div class="ph-title">Links</div>
+        <div class="ph-sub">Full customer details for every activation link. Search, filter, copy links, and deactivate instantly.</div>
+      </div>
+
+      <div class="links-search-bar">
+        <input type="text" id="lk-search" placeholder="Search by name, email, WeChat, package, org ID…" oninput="renderLinks()"/>
+        <button class="btn btn-outline btn-sm" onclick="loadData();renderLinks()">↻ Refresh</button>
+      </div>
+
+      <div class="lk-filter-tabs" id="lk-filters">
+        <button class="fb active" onclick="setLKFilter('all',this)">All</button>
+        <button class="fb" onclick="setLKFilter('active',this)">Active</button>
+        <button class="fb" onclick="setLKFilter('expiring',this)">Expiring Soon</button>
+        <button class="fb" onclick="setLKFilter('expired_sub',this)">Sub Expired</button>
+        <button class="fb" onclick="setLKFilter('pending',this)">Not Submitted</button>
+        <button class="fb" onclick="setLKFilter('deactivated',this)">Deactivated</button>
+      </div>
+
+      <div id="lk-stats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;margin-bottom:1.1rem">
+        <div class="stat"><div class="stat-val" id="lks-all">0</div><div class="stat-lbl">Total</div></div>
+        <div class="stat"><div class="stat-val sv-green" id="lks-act">0</div><div class="stat-lbl">Active</div></div>
+        <div class="stat"><div class="stat-val sv-warn" id="lks-exp">0</div><div class="stat-lbl">Expiring</div></div>
+        <div class="stat"><div class="stat-val sv-ind" id="lks-pend">0</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat"><div class="stat-val sv-red" id="lks-deact">0</div><div class="stat-lbl">Deactivated</div></div>
+      </div>
+
+      <div id="lk-list"><div class="empty">Click Refresh to load.</div></div>
+    </div>
+
+    <!-- Email -->
+    <div class="page" id="page-email">
+      <div class="ph"><div class="ph-title">Email Configuration</div><div class="ph-sub">Configure SMTP to send automatic renewal reminders and expiry notifications.</div></div>
+
+      <div class="card">
+        <div class="card-title">SMTP Settings</div>
+        <div class="provider-btns">
+          <span style="font-size:.72rem;color:var(--muted);font-weight:500;align-self:center;margin-right:.2rem">Quick setup:</span>
+          <button class="btn btn-outline btn-sm" onclick="preset('gmail')">Gmail</button>
+          <button class="btn btn-outline btn-sm" onclick="preset('outlook')">Outlook</button>
+          <button class="btn btn-outline btn-sm" onclick="preset('yahoo')">Yahoo</button>
+          <button class="btn btn-outline btn-sm" onclick="preset('brevo')">Brevo (free)</button>
+          <button class="btn btn-outline btn-sm" onclick="preset('sendgrid')">SendGrid (free)</button>
+        </div>
+        <div class="gmail-guide" id="gmail-guide">
+          <strong style="color:var(--warn);display:block;margin-bottom:.4rem">⚠ Gmail requires an App Password</strong>
+          <ol style="padding-left:1.3rem;color:var(--muted)">
+            <li>Go to <strong>myaccount.google.com</strong> → Security</li>
+            <li>Enable <strong>2-Step Verification</strong></li>
+            <li>Search <strong>App Passwords</strong> → Create one named "DTC Portal"</li>
+            <li>Paste the 16-character password into the Password field below</li>
+          </ol>
+        </div>
+        <div class="form-row"><div class="form-group"><label>SMTP Host</label><input id="em-host" placeholder="smtp.gmail.com"/></div><div class="form-group"><label>Port</label><input id="em-port" placeholder="587"/></div></div>
+        <div class="form-row"><div class="form-group"><label>Email Address</label><input type="email" id="em-user" placeholder="you@gmail.com"/></div><div class="form-group"><label>App Password</label><input type="password" id="em-pass" placeholder="••••••••••"/></div></div>
+        <div class="form-row">
+          <div class="form-group"><label>Sender Name</label><input id="em-name" placeholder="DTC Digital Tools Corner"/></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:.1rem">
+            <label class="toggle"><input type="checkbox" id="em-ssl"/><div class="toggle-track"><div class="toggle-thumb"></div></div><span style="font-size:.82rem;color:var(--text);margin-left:.4rem;font-weight:500">SSL (port 465)</span></label>
+          </div>
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="saveEC()">Save Configuration</button>
+          <button class="btn btn-outline" onclick="testEmail()"><span id="test-txt">Send Test Email</span></button>
+        </div>
+        <div class="msg ok" id="em-ok"></div><div class="msg err" id="em-err"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Automatic Schedule</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:.7rem .9rem;background:#f8fafc;border:1px solid var(--border);border-radius:8px">
+            <div><div style="font-size:.82rem;font-weight:600;color:var(--text)">5-Day Renewal Reminder</div><div style="font-size:.71rem;color:var(--muted);margin-top:.1rem">Sent automatically when 5 days remain on the subscription</div></div>
+            <span class="badge b-act">✓ Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:.7rem .9rem;background:#f8fafc;border:1px solid var(--border);border-radius:8px">
+            <div><div style="font-size:.82rem;font-weight:600;color:var(--text)">Subscription Expiry Notice</div><div style="font-size:.71rem;color:var(--muted);margin-top:.1rem">Sent automatically on the day the subscription expires</div></div>
+            <span class="badge b-act">✓ Active</span>
+          </div>
+        </div>
+        <p style="font-size:.71rem;color:var(--muted2);margin-top:.9rem;line-height:1.6">The server checks for upcoming expirations every hour. Each email is sent only once per event per customer.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Email Log</div>
+        <div id="email-log-wrap"><div class="empty">No emails sent yet.</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Decline Modal -->
+<div class="modal-overlay" id="decline-modal" onclick="if(event.target===this)closeDecline()">
+  <div class="modal">
+    <div class="modal-title">Decline Activation Request</div>
+    <div class="modal-sub">This will notify the customer that their request has been declined. Please provide a reason so they know what to correct.</div>
+    <input type="hidden" id="decline-token"/>
+    <div class="form-group">
+      <label>Decline Reason</label>
+      <textarea id="decline-reason" rows="3" placeholder="e.g. The Organization ID provided does not match our records. Please verify your ID from Settings → Account and resubmit."></textarea>
+    </div>
+    <div style="font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:.2rem">This message will be displayed to the customer on their activation page.</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeDecline()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDecline()">Decline Request</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let adminKey='', allTokens={}, emailLog=[], dashFilter='all', custFilter='all', lkFilter='all';
+let customProducts = [];
+let instrSets = [];
+let editingInstrId = null;
+
+// ── Login ────────────────────────────────────────────────────────────────────
+async function login() {
+  const key    = document.getElementById('admin-key').value.trim();
+  const errEl  = document.getElementById('login-err');
+  const btn    = document.querySelector('#login-wrap .btn-primary');
+  if (!key) { errEl.textContent='Please enter your admin key.'; errEl.classList.add('show'); return; }
+  errEl.classList.remove('show');
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  try {
+    const r = await fetch('/admin/sessions-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminKey: key })
+    });
+    if (!r.ok && r.status !== 200) throw new Error('Server error ' + r.status);
+    const d = await r.json();
+    if (d.error) {
+      errEl.textContent = 'Incorrect admin key. Please try again.';
+      errEl.classList.add('show');
+      btn.textContent = 'Sign In →'; btn.disabled = false;
+      return;
+    }
+    // Auth succeeded — load data then show app
+    adminKey = key; allTokens = d.tokens; emailLog = d.emailLog || [];
+    await loadProductsPage();
+    await loadInstrSetsPage();
+    document.getElementById('login-wrap').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    renderDash(); renderCustomers(); loadEC(); renderEL();
+    updateDeactBadge(); renderLinks();
+  } catch(err) {
+    errEl.textContent = 'Connection error. Is the server running?';
+    errEl.classList.add('show');
+    btn.textContent = 'Sign In →'; btn.disabled = false;
+  }
+}
+
+function nav(page, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+async function loadData() {
+  const r = await fetch('/admin/sessions-data', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ adminKey }) });
+  const d = await r.json();
+  if (d.error) return;
+  allTokens=d.tokens; emailLog=d.emailLog||[];
+  renderDash(); renderCustomers(); renderEL();
+  updateInstrSetSelect();
+  renderLinks();
+  updateDeactBadge();
+}
+
+// ── Products ──────────────────────────────────────────────────────────────────
+async function loadProductsPage() {
+  try {
+    const r = await fetch(`/admin/products?adminKey=${encodeURIComponent(adminKey)}`);
+    const d = await r.json();
+    if (Array.isArray(d)) { customProducts = d; renderProductsList(); updatePackageSelect(); }
+  } catch {}
+}
+
+function renderProductsList() {
+  const wrap = document.getElementById('products-list');
+  if (!wrap) return;
+  if (!customProducts.length) { wrap.innerHTML = '<div class="empty">No products yet. Click + Add Product.</div>'; return; }
+  wrap.innerHTML = customProducts.map((p, i) => `
+    <div style="display:grid;grid-template-columns:1fr 160px 80px auto;gap:.6rem;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border)">
+      <input type="text" value="${esc(p.name)}" placeholder="Product name" oninput="customProducts[${i}].name=this.value;updatePackageSelect()" style="font-size:.82rem;padding:.4rem .65rem"/>
+      <div style="display:flex;align-items:center;gap:.4rem">
+        <input type="number" value="${p.days||30}" min="1" max="3650" oninput="customProducts[${i}].days=parseInt(this.value)||30" style="font-size:.82rem;padding:.4rem .55rem;width:70px"/>
+        <span style="font-size:.72rem;color:var(--muted)">days</span>
+      </div>
+      <div style="font-size:.7rem;color:var(--muted2);text-align:center">
+        <label style="display:flex;align-items:center;gap:.3rem;cursor:pointer;font-size:.68rem;color:var(--muted);font-weight:500;white-space:nowrap" title="Use Session Details field instead of Organization ID">
+          <input type="checkbox" ${p.useSessionField?'checked':''} onchange="customProducts[${i}].useSessionField=this.checked" style="width:13px;height:13px;cursor:pointer"/>
+          Session field
+        </label>
+      </div>
+      <button class="btn btn-outline btn-sm" style="color:var(--error);border-color:var(--error-border)" onclick="removeProduct(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addProduct() {
+  customProducts.push({ id: 'custom-' + Date.now(), name: '', days: 30 });
+  renderProductsList();
+}
+
+function removeProduct(i) {
+  customProducts.splice(i, 1);
+  renderProductsList();
+  updatePackageSelect();
+}
+
+function updatePackageSelect() {
+  const sel = document.getElementById('pkg');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Select Package —</option>' +
+    customProducts.filter(p=>p.name.trim()).map(p => `<option${cur===p.name?' selected':''}>${esc(p.name)}</option>`).join('');
+  if (cur && [...sel.options].some(o=>o.value===cur)) sel.value = cur;
+}
+
+async function saveProducts() {
+  const valid = customProducts.filter(p=>p.name.trim());
+  const r = await fetch('/admin/products', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ adminKey, products: valid }) });
+  const d = await r.json();
+  showM('prod', d.success, d.success ? '✓ Products saved.' : 'Failed to save.');
+  if (d.success) { customProducts = valid; renderProductsList(); updatePackageSelect(); }
+}
+
+// ── Instruction Sets Library ──────────────────────────────────────────────────
+async function loadInstrSetsPage() {
+  try {
+    const r = await fetch(`/admin/instruction-sets?adminKey=${encodeURIComponent(adminKey)}`);
+    const d = await r.json();
+    if (Array.isArray(d)) { instrSets = d; renderInstrSetsList(); updateInstrSetSelect(); }
+  } catch {}
+}
+
+function renderInstrSetsList() {
+  const wrap = document.getElementById('instr-sets-list');
+  if (!wrap) return;
+  if (!instrSets.length) {
+    wrap.innerHTML = '<div class="empty">No instruction sets yet. Click + New Set to create one.</div>';
+    return;
+  }
+  wrap.innerHTML = instrSets.map((set, i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);gap:1rem">
+      <div>
+        <div style="font-weight:600;font-size:.85rem;color:var(--text)">${esc(set.name)}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem;line-height:1.5">${esc((set.beforeApproval||'').split('\n')[0].replace(/^\d+[\.\)]\s*/,'').slice(0,80))}${(set.beforeApproval||'').length>80?'…':''}</div>
+      </div>
+      <div style="display:flex;gap:.4rem;flex-shrink:0">
+        <button class="btn btn-ghost-blue btn-sm" onclick="editInstrSet(${i})">✏ Edit</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--error);border-color:var(--error-border)" onclick="deleteInstrSet(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function updateInstrSetSelect() {
+  const sel = document.getElementById('instr-set');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— No instructions —</option>' +
+    instrSets.map(s => `<option value="${esc(s.id)}"${cur===s.id?' selected':''}>${esc(s.name)}</option>`).join('');
+  if (cur && [...sel.options].some(o=>o.value===cur)) sel.value = cur;
+}
+
+function newInstrSet() {
+  editingInstrId = null;
+  document.getElementById('ie-name').value   = '';
+  document.getElementById('ie-before').value = '';
+  document.getElementById('ie-after').value  = '';
+  document.getElementById('ie-before-preview').innerHTML = '';
+  document.getElementById('ie-after-preview').innerHTML  = '';
+  document.getElementById('instr-editor-title').textContent = 'New instruction set';
+  document.getElementById('instr-editor-card').style.display = '';
+  document.getElementById('ie-ok').classList.remove('show');
+  document.getElementById('ie-err').classList.remove('show');
+  document.getElementById('ie-name').focus();
+}
+
+function editInstrSet(i) {
+  const set = instrSets[i];
+  editingInstrId = set.id;
+  document.getElementById('ie-name').value   = set.name;
+  document.getElementById('ie-before').value = set.beforeApproval || '';
+  document.getElementById('ie-after').value  = set.afterApproval  || '';
+  document.getElementById('instr-editor-title').textContent = 'Edit — ' + set.name;
+  document.getElementById('instr-editor-card').style.display = '';
+  document.getElementById('ie-ok').classList.remove('show');
+  document.getElementById('ie-err').classList.remove('show');
+  updateIEPreview();
+  document.getElementById('instr-editor-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function cancelInstrEdit() {
+  document.getElementById('instr-editor-card').style.display = 'none';
+  editingInstrId = null;
+}
+
+function deleteInstrSet(i) {
+  const set = instrSets[i];
+  if (!confirm(`Delete "${set.name}"? This cannot be undone.`)) return;
+  instrSets.splice(i, 1);
+  persistInstrSets();
+}
+
+async function saveInstrSet() {
+  const name   = document.getElementById('ie-name').value.trim();
+  const before = document.getElementById('ie-before').value;
+  const after  = document.getElementById('ie-after').value;
+  if (!name) { showM('ie', false, 'Please enter a name for this instruction set.'); return; }
+  if (editingInstrId) {
+    const idx = instrSets.findIndex(s => s.id === editingInstrId);
+    if (idx >= 0) { instrSets[idx] = { ...instrSets[idx], name, beforeApproval: before, afterApproval: after }; }
+  } else {
+    instrSets.push({ id: 'iset-' + Date.now(), name, beforeApproval: before, afterApproval: after });
+  }
+  await persistInstrSets();
+}
+
+async function persistInstrSets() {
+  const r = await fetch('/admin/instruction-sets', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ adminKey, sets: instrSets }) });
+  const d = await r.json();
+  if (d.success) {
+    renderInstrSetsList(); updateInstrSetSelect();
+    showM('ie', true, '✓ Instruction set saved.');
+    setTimeout(() => { document.getElementById('instr-editor-card').style.display='none'; editingInstrId=null; }, 900);
+  } else { showM('ie', false, 'Failed to save.'); }
+}
+
+function instrLinesToHtml(txt, mode) {
+  const lines = txt.split('\n').filter(l=>l.trim());
+  if (!lines.length) return '<span style="color:var(--muted2);font-style:italic">Start typing…</span>';
+  if (mode==='ol') return '<ol style="padding-left:1.2rem">'+lines.map(l=>`<li>${l.replace(/^\d+[\.\)]\s*/,'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</li>`).join('')+'</ol>';
+  return lines.map((l,i)=>`<div style="display:flex;gap:.5rem;margin-bottom:.28rem"><div style="min-width:20px;height:20px;border-radius:50%;background:var(--blue-light);border:1.5px solid var(--blue-mid);color:var(--blue);font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div><div>${l.replace(/^\d+[\.\)]\s*/,'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div></div>`).join('');
+}
+
+function updateIEPreview() {
+  const b = document.getElementById('ie-before'); if(b) document.getElementById('ie-before-preview').innerHTML = instrLinesToHtml(b.value,'ol');
+  const a = document.getElementById('ie-after');  if(a) document.getElementById('ie-after-preview').innerHTML  = instrLinesToHtml(a.value,'steps');
+}
+
+// ── Status helpers ────────────────────────────────────────────────────────────
+function getLinkStatus(t) {
+  if (t.deactivated) return 'deactivated';
+  if (t.declined)  return 'declined';
+  if (t.approved)  return 'activated';
+  if (t.used)      return 'submitted';
+  if (t.expiresAt && new Date()>new Date(t.expiresAt)) return 'expired';
+  if ((t.accessCount||0)>0) return 'accessed';
+  return 'pending';
+}
+function getSubStatus(t) {
+  if (!t.subscriptionExpiresAt) return null;
+  const d = daysUntil(t.subscriptionExpiresAt);
+  return d<0?'expired':d<=5?'danger':d<=30?'soon':'ok';
+}
+function daysUntil(iso){ return Math.ceil((new Date(iso)-new Date())/(1000*60*60*24)); }
+function statusBadge(s) {
+  const m={pending:['b-pend','○ Not Opened'],accessed:['b-acc','◎ Opened'],submitted:['b-sub','⏳ Submitted'],activated:['b-act','✓ Activated'],expired:['b-exp','✕ Expired'],declined:['b-dec','✕ Declined'],deactivated:['b-exp','⊘ Deactivated']};
+  const[c,l]=m[s]||m.pending;
+  return `<span class="badge ${c}"><span class="b-dot"></span>${l}</span>`;
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+function setFilter(f,btn){ dashFilter=f; document.querySelectorAll('#df .fb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderDash(); }
+
+function renderDash() {
+  const entries = Object.entries(allTokens).map(([tok,t])=>[tok,t,getLinkStatus(t)]).sort((a,b)=>new Date(b[1].createdAt||0)-new Date(a[1].createdAt||0));
+  const cnt={all:0,pending:0,accessed:0,submitted:0,activated:0,expired:0,declined:0};
+  entries.forEach(([,,s])=>{ cnt.all++; cnt[s]=(cnt[s]||0)+1; });
+  document.getElementById('s-all').textContent = cnt.all;
+  document.getElementById('s-pend').textContent= cnt.pending;
+  document.getElementById('s-acc').textContent = cnt.accessed;
+  document.getElementById('s-sub').textContent = cnt.submitted;
+  document.getElementById('s-act').textContent = cnt.activated;
+  document.getElementById('s-exp').textContent = (cnt.expired||0)+(cnt.declined||0);
+
+  const filtered = dashFilter==='all'?entries:entries.filter(([,,s])=>s===dashFilter);
+  const wrap = document.getElementById('dash-tbl');
+  if (!filtered.length) { wrap.innerHTML='<div class="empty">No links match this filter.</div>'; return; }
+
+  const rows = filtered.map(([token,t,status])=>{
+    const subSt = getSubStatus(t);
+    const rowCls = subSt==='soon'||subSt==='danger'?'row-expiring':subSt==='expired'?'row-expired-sub':status==='declined'?'row-declined':'';
+
+    // Determine if this token's product uses session field
+    const prod = customProducts.find(p=>p.name===t.packageType);
+    const isSess = !!(prod && prod.useSessionField);
+
+    // Build the ID/session cell
+    let idCell = '<span style="color:var(--muted2);font-size:.65rem">Not submitted</span>';
+    if (isSess && t.sessionDetails) {
+      // Parse and show warnings in admin
+      let warnings = [];
+      let parsedSess = null;
+      try {
+        parsedSess = JSON.parse(t.sessionDetails);
+        const planType  = (parsedSess.planType  || '').toLowerCase();
+        const structure = (parsedSess.structure || '').toLowerCase();
+        if (planType !== 'free') warnings.push(`Plan is "${parsedSess.planType}" (expected free)`);
+        if (structure !== 'personal') warnings.push(`Structure is "${parsedSess.structure}" (expected personal)`);
+      } catch(e) { warnings.push('Invalid JSON'); }
+      const warnHtml = warnings.map(w=>`<div class="sess-warn">⚠ ${esc(w)}</div>`).join('');
+      const previewText = t.sessionDetails.length > 60 ? t.sessionDetails.slice(0,60)+'…' : t.sessionDetails;
+      idCell = `<div>
+        <span class="sess-badge">📋 Session Details</span>
+        <div class="orgid-wrap" style="margin-top:.3rem">
+          <span class="orgid-txt" title="${esc(t.sessionDetails)}">${esc(previewText)}</span>
+          <button class="icopy" onclick="copyText(\`${t.sessionDetails.replace(/`/g,'\`')}\`,this)">Copy</button>
+        </div>
+        ${warnHtml}
+      </div>`;
+    } else if (!isSess && t.orgId) {
+      idCell = `<div class="orgid-wrap"><span class="orgid-txt">${esc(t.orgId)}</span><button class="icopy" onclick="copyText('${esc(t.orgId)}',this)">Copy</button></div>`;
+    } else if (isSess) {
+      idCell = '<span class="sess-badge">📋 Session</span><br><span style="color:var(--muted2);font-size:.65rem">Not submitted</span>';
+    }
+
+    // Sub expiry
+    let subCell='<span style="color:var(--muted2);font-size:.65rem">—</span>';
+    if (t.subscriptionExpiresAt) {
+      const days=daysUntil(t.subscriptionExpiresAt);
+      const cls=subSt==='expired'?'danger':subSt==='danger'?'danger':subSt==='soon'?'soon':'ok';
+      const flag=(subSt==='soon'||subSt==='danger')?`<div class="exp-flag ${subSt==='danger'?'danger':'soon'}">⚠ ${days<=0?'Expired':days+'d left'}</div>`:'';
+      subCell=`<div class="sub-exp ${cls}"><div class="days">${days<=0?'Expired':days+' days left'}</div><div class="date">${fmt(t.subscriptionExpiresAt)}</div>${flag}</div>`;
+    }
+
+    // Action
+    let actionCell='<span style="color:var(--muted2);font-size:.65rem">—</span>';
+    if (t.approved) actionCell=`<div><span class="badge b-act">✓ Activated</span><div class="approved-ts">✓ ${fmtFull(new Date(t.approvedAt))}</div></div>`;
+    else if (t.declined) actionCell=`<div><span class="badge b-dec">✕ Declined</span><div class="declined-ts">✕ ${fmtFull(new Date(t.declinedAt))}</div></div>`;
+    else if (status==='submitted') actionCell=`<div class="action-wrap"><button class="approve-btn" id="ab-${token}" onclick="approve('${token}')">✓ Approve</button><button class="decline-btn" id="db-${token}" onclick="openDecline('${token}')">✕ Decline</button></div>`;
+
+    const ac=t.accessCount||0;
+    const hasLog=(t.accessLog||[]).length>0;
+    const logRows=(t.accessLog||[]).slice(-10).map(e=>`<div class="log-entry"><span class="le-t">${fmtFull(new Date(e.at))}</span><span class="le-ip">${esc(e.ip)}</span><span class="le-ua" title="${esc(e.userAgent)}">${esc(parseUA(e.userAgent))}</span></div>`).join('');
+
+    return `<tr class="${rowCls}">
+      <td><div class="cust-name">${esc(t.customerName)}</div><div class="cust-meta">${esc(t.packageType)}</div>${t.email?`<div class="cust-meta">${esc(t.email)}</div>`:''}</td>
+      <td>${statusBadge(status)}</td>
+      <td>${idCell}</td>
+      <td>
+        <div class="tl-cell">
+          <div class="tl-row"><span class="tl-lbl">Created</span><span class="tl-val">${fmt(t.createdAt)}</span></div>
+          <div class="tl-row"><span class="tl-lbl">1st open</span><span class="tl-val">${t.firstAccessedAt?fmt(t.firstAccessedAt):'—'}</span></div>
+          ${t.submittedAt?`<div class="tl-row"><span class="tl-lbl">Submitted</span><span class="tl-val">${fmt(t.submittedAt)}</span></div>`:''}
+          ${t.approvedAt?`<div class="tl-row"><span class="tl-lbl">Activated</span><span class="tl-val green">${fmt(t.approvedAt)}</span></div>`:''}
+          ${t.declinedAt?`<div class="tl-row"><span class="tl-lbl">Declined</span><span class="tl-val red">${fmt(t.declinedAt)}</span></div>`:''}
+        </div>
+        <span class="acount ${ac>0?'':'zero'}">👁 ${ac} open${ac!==1?'s':''}</span>
+        ${hasLog?`<button class="xbtn" id="xb-${token}" onclick="toggleLog('${token}')">▸ View access log</button>`:''}
+      </td>
+      <td>${subCell}</td>
+      <td>${t.wechat?`<span style="font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--text)">${esc(t.wechat)}</span>`:'<span style="color:var(--muted2)">—</span>'}</td>
+      <td>${actionCell}</td>
+    </tr>
+    <tr class="log-row" id="log-row-${token}">
+      <td colspan="7"><div class="log-inner">
+        <div class="log-hdr"><span>Time</span><span>IP Address</span><span>Device</span></div>
+        ${logRows||'<div style="color:var(--muted2);font-size:.63rem">No access records.</div>'}
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Customer</th><th>Status</th><th>ID / Session Details</th><th>Timeline</th><th>Subscription</th><th>WeChat</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+// ── Approve ───────────────────────────────────────────────────────────────────
+async function approve(token) {
+  const btn=document.getElementById(`ab-${token}`);
+  if(btn){btn.textContent='…';btn.disabled=true;}
+  const r=await fetch('/admin/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,token})});
+  const d=await r.json();
+  if(d.success) loadData();
+  else{if(btn){btn.textContent='✓ Approve';btn.disabled=false;}alert('Failed. Please try again.');}
+}
+
+// ── Decline modal ─────────────────────────────────────────────────────────────
+function openDecline(token) {
+  document.getElementById('decline-token').value=token;
+  document.getElementById('decline-reason').value='The Organization ID provided does not match our records. Please verify your ID from Settings → Account in Claude and resubmit with a new link.';
+  document.getElementById('decline-modal').classList.add('open');
+}
+function closeDecline() { document.getElementById('decline-modal').classList.remove('open'); }
+
+async function confirmDecline() {
+  const token  = document.getElementById('decline-token').value;
+  const reason = document.getElementById('decline-reason').value.trim();
+  if (!reason) { alert('Please provide a reason for declining.'); return; }
+  const r=await fetch('/admin/decline',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,token,reason})});
+  const d=await r.json();
+  closeDecline();
+  if(d.success) loadData();
+  else alert('Failed to decline. Please try again.');
+}
+
+// ── Log toggle ────────────────────────────────────────────────────────────────
+function toggleLog(token){const row=document.getElementById('log-row-'+token);const btn=document.getElementById('xb-'+token);const open=row.classList.toggle('open');if(btn)btn.textContent=open?'▾ Hide access log':'▸ View access log';}
+
+// ── Customers page ────────────────────────────────────────────────────────────
+function setCF(f,btn){custFilter=f;document.querySelectorAll('#cf .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCustomers();}
+
+function renderCustomers() {
+  const activated=Object.entries(allTokens).filter(([,t])=>t.approved&&t.email).sort((a,b)=>daysUntil(a[1].subscriptionExpiresAt||'9999')-daysUntil(b[1].subscriptionExpiresAt||'9999'));
+  const expiring=activated.filter(([,t])=>{const d=daysUntil(t.subscriptionExpiresAt||'9999');return d>=0&&d<=30;}).length;
+  const nb=document.getElementById('nb-exp');
+  nb.textContent=expiring; nb.style.display=expiring>0?'':'none';
+
+  const filtered=activated.filter(([,t])=>{
+    if(custFilter==='all')return true;
+    const st=getSubStatus(t);
+    if(custFilter==='active')   return st==='ok';
+    if(custFilter==='expiring') return st==='soon'||st==='danger';
+    if(custFilter==='expired')  return st==='expired';
+    return true;
+  });
+
+  const wrap=document.getElementById('cust-list');
+  if(!filtered.length){wrap.innerHTML='<div class="empty">No customers match this filter.</div>';return;}
+
+  wrap.innerHTML=filtered.map(([token,t])=>{
+    const subSt=getSubStatus(t);
+    const days=t.subscriptionExpiresAt?daysUntil(t.subscriptionExpiresAt):null;
+    const cardCls='cust-card'+(subSt==='soon'||subSt==='danger'?' expiring':subSt==='expired'?' expired-sub':'');
+    const total=t.subscriptionDays||30;
+    const pct=Math.min(100,Math.max(0,((total-(days||0))/total)*100));
+    const barColor=subSt==='expired'||subSt==='danger'?'#dc2626':subSt==='soon'?'#d97706':'#16a34a';
+    const expBadge=days===null?'':days<0?`<span class="badge b-exp">✕ Expired</span>`:days<=5?`<span class="badge" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626">⚠ ${days}d left</span>`:days<=30?`<span class="badge" style="background:#fffbeb;border:1px solid #fde68a;color:#d97706">⏰ ${days}d left</span>`:`<span class="badge b-act">✓ Active · ${days}d left</span>`;
+    const expDate=t.subscriptionExpiresAt?new Date(t.subscriptionExpiresAt).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}):'—';
+    const dCls=subSt==='expired'||subSt==='danger'?'red':subSt==='soon'?'warn':'green';
+    return `<div class="${cardCls}">
+      <div class="cust-top"><div><div class="cust-nm">${esc(t.customerName)}</div><div class="cust-pk">${esc(t.packageType)}</div></div><div>${expBadge}</div></div>
+      <div class="cust-grid">
+        <div><div class="cf-lbl">Email</div><div class="cf-val">${esc(t.email||'—')}</div></div>
+        <div><div class="cf-lbl">WeChat</div><div class="cf-val">${esc(t.wechat||'—')}</div></div>
+        <div><div class="cf-lbl">${(()=>{const pr=customProducts.find(p=>p.name===t.packageType);return pr&&pr.useSessionField?'Session Details':'Organization ID';})()}</div><div style="display:flex;align-items:flex-start;gap:.3rem">${(()=>{const pr=customProducts.find(p=>p.name===t.packageType);if(pr&&pr.useSessionField){const sd=t.sessionDetails||'';return `<div class="cf-val" style="flex:1;font-size:.68rem">${esc(sd.slice(0,30))}${sd.length>30?'…':''}</div>${sd?`<button class="icopy btn-sm" onclick="copyText(\\`${sd.replace(/\`/g,'\\`')}\\`,this)">Copy</button>`:''}`;}else{return `<div class="cf-val" style="flex:1">${esc((t.orgId||'—').slice(0,22))}${t.orgId&&t.orgId.length>22?'…':''}</div>${t.orgId?`<button class="icopy btn-sm" onclick="copyText('${esc(t.orgId)}',this)">Copy</button>`:''}`;}})()} </div></div>
+        <div><div class="cf-lbl">Activated On</div><div class="cf-val">${t.approvedAt?new Date(t.approvedAt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—'}</div></div>
+        <div><div class="cf-lbl">Expires On</div><div class="cf-val ${dCls}">${expDate}</div></div>
+        <div><div class="cf-lbl">Days Remaining</div><div class="cf-val ${dCls}">${days===null?'—':days<=0?'Expired':days+' days'}</div></div>
+      </div>
+      <div class="exp-bar-wrap"><div class="exp-bar-label"><span>Subscription Usage</span><span style="font-weight:600">${Math.round(pct)}% used</span></div><div class="exp-bar"><div class="exp-bar-fill" style="width:${pct}%;background:${barColor}"></div></div></div>
+      <div class="email-actions">
+        <button class="btn btn-ghost-blue btn-sm" onclick="sendReminder('${token}','reminder')">📧 Send 5-day Reminder</button>
+        <button class="btn btn-outline btn-sm" style="border-color:var(--error-border);color:var(--error)" onclick="sendReminder('${token}','expired')">📧 Send Expiry Notice</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function sendReminder(token,type){
+  const r=await fetch('/admin/send-reminder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,token,type})});
+  const d=await r.json();
+  alert(d.ok?'✓ Email sent successfully.':'✕ Failed: '+d.error);
+  if(d.ok)loadData();
+}
+
+
+// ── Links page ────────────────────────────────────────────────────────────────
+function setLKFilter(f, btn) {
+  lkFilter = f;
+  document.querySelectorAll('#lk-filters .fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLinks();
+}
+
+function updateDeactBadge() {
+  const count = Object.values(allTokens).filter(t => t.deactivated).length;
+  const nb = document.getElementById('nb-deact');
+  if (nb) { nb.textContent = count; nb.style.display = count > 0 ? '' : 'none'; }
+}
+
+function renderLinks() {
+  const wrap   = document.getElementById('lk-list');
+  const search = (document.getElementById('lk-search')?.value || '').toLowerCase().trim();
+  const now    = new Date();
+
+  const entries = Object.entries(allTokens)
+    .sort((a, b) => new Date(b[1].createdAt || 0) - new Date(a[1].createdAt || 0));
+
+  // Stats
+  let cAll=0, cAct=0, cExp=0, cPend=0, cDeact=0;
+  entries.forEach(([,t]) => {
+    cAll++;
+    if (t.deactivated) { cDeact++; return; }
+    const sub = t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt) : null;
+    const days = sub ? Math.ceil((sub - now) / 86400000) : null;
+    if (t.approved && days !== null && days > 0) {
+      cAct++;
+      if (days <= 14) cExp++;
+    } else if (!t.used || !t.approved) cPend++;
+  });
+  document.getElementById('lks-all').textContent  = cAll;
+  document.getElementById('lks-act').textContent  = cAct;
+  document.getElementById('lks-exp').textContent  = cExp;
+  document.getElementById('lks-pend').textContent = cPend;
+  document.getElementById('lks-deact').textContent= cDeact;
+
+  // Filter
+  const filtered = entries.filter(([tok, t]) => {
+    const sub  = t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt) : null;
+    const days = sub ? Math.ceil((sub - now) / 86400000) : null;
+    if (lkFilter === 'deactivated') return !!t.deactivated;
+    if (t.deactivated && lkFilter !== 'all') return false;
+    if (lkFilter === 'active')      return t.approved && days !== null && days > 0;
+    if (lkFilter === 'expiring')    return t.approved && days !== null && days > 0 && days <= 14;
+    if (lkFilter === 'expired_sub') return t.approved && days !== null && days <= 0;
+    if (lkFilter === 'pending')     return !t.used || !t.approved;
+    return true;
+  }).filter(([tok, t]) => {
+    if (!search) return true;
+    const haystack = [
+      t.customerName, t.email, t.wechat, t.packageType,
+      t.orgId, t.sessionDetails, tok
+    ].join(' ').toLowerCase();
+    return haystack.includes(search);
+  });
+
+  if (!filtered.length) {
+    wrap.innerHTML = '<div class="empty">No links match your search or filter.</div>';
+    return;
+  }
+
+  wrap.innerHTML = filtered.map(([tok, t]) => {
+    const sub    = t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt) : null;
+    const act    = t.approvedAt ? new Date(t.approvedAt) : null;
+    const days   = sub ? Math.ceil((sub - now) / 86400000) : null;
+    const total  = (act && sub) ? Math.round((sub - act) / 86400000) : null;
+    const pct    = (total && days !== null) ? Math.min(100, Math.max(0, ((total - Math.max(0,days)) / total) * 100)) : 0;
+    const isDeact = !!t.deactivated;
+    const subStatus = !t.approved ? 'none' : (days === null ? 'none' : days <= 0 ? 'expired' : days <= 5 ? 'danger' : days <= 14 ? 'warn' : 'ok');
+    const barColor  = subStatus==='expired'||subStatus==='danger' ? '#dc2626' : subStatus==='warn' ? '#d97706' : '#2563eb';
+
+    // Determine link
+    const proto = window.location.protocol;
+    const host  = window.location.host;
+    const linkUrl = `${proto}//${host}/submit?token=${tok}`;
+
+    // Org / session cell
+    const prod  = customProducts.find(p => p.name === t.packageType);
+    const isSess= !!(prod && prod.useSessionField);
+    let idLabel = isSess ? 'Session Details' : 'Organization ID';
+    let idVal   = '—';
+    if (isSess && t.sessionDetails) {
+      let warns = [];
+      try {
+        const ps = JSON.parse(t.sessionDetails);
+        if ((ps.planType||'').toLowerCase() !== 'free') warns.push('Plan: ' + ps.planType);
+        if ((ps.structure||'').toLowerCase() !== 'personal') warns.push('Structure: ' + ps.structure);
+      } catch(e) {}
+      idVal = (t.sessionDetails.length > 40 ? t.sessionDetails.slice(0,40)+'…' : t.sessionDetails) + (warns.length ? ' ⚠' : '');
+    } else if (!isSess && t.orgId) {
+      idVal = t.orgId;
+    }
+
+    // Card class
+    let cardClass = 'lk-card';
+    if (isDeact) cardClass += ' deactivated';
+    else if (subStatus === 'warn' || subStatus === 'danger') cardClass += ' expiring-soon';
+
+    // Status badge
+    const statusBadgeHtml = isDeact
+      ? '<span class="badge b-exp">⊘ Deactivated</span>'
+      : !t.used ? '<span class="badge b-pend">○ Not submitted</span>'
+      : !t.approved ? '<span class="badge b-sub">⏳ Awaiting approval</span>'
+      : t.declined ? '<span class="badge b-dec">✕ Declined</span>'
+      : days === null ? '<span class="badge b-act">✓ Activated</span>'
+      : days <= 0 ? '<span class="badge b-exp">✕ Sub expired</span>'
+      : days <= 5 ? `<span class="badge" style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626">⚠ ${days}d left</span>`
+      : days <= 14 ? `<span class="badge" style="background:#fffbeb;border:1px solid #fde68a;color:#d97706">⏰ ${days}d left</span>`
+      : `<span class="badge b-act">✓ Active · ${days}d left</span>`;
+
+    // Deact button
+    const deactBtn = isDeact
+      ? `<button class="deact-btn deact-state" onclick="toggleDeactivate('${tok}', false)">✓ Reactivate Link</button>`
+      : `<button class="deact-btn active-state" onclick="toggleDeactivate('${tok}', true)">⊘ Deactivate Link</button>`;
+
+    return `<div class="${cardClass}" id="lkcard-${tok}">
+      ${isDeact ? `<div class="deact-banner">⊘ This link has been deactivated${t.deactivatedAt ? ' on ' + fmtFull(new Date(t.deactivatedAt)) : ''}. Customers cannot access it.</div>` : ''}
+
+      <div class="lk-top">
+        <div>
+          <div class="lk-name">${esc(t.customerName)}</div>
+          <div class="lk-pkg">${esc(t.packageType)}${t.instrSetId ? ' · <span style="color:var(--blue);font-size:.68rem">' + esc((instrSets.find(s=>s.id===t.instrSetId)||{name:''}).name) + '</span>' : ''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+          ${statusBadgeHtml}
+        </div>
+      </div>
+
+      ${t.approved && sub ? `
+      <div class="sub-bar-wrap">
+        <div class="sub-bar-label">
+          <span>Subscription — started ${act ? act.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—'}</span>
+          <span style="font-weight:600;color:${barColor}">${days !== null && days > 0 ? days+' days left' : days === 0 ? 'Last day' : 'Expired'}</span>
+        </div>
+        <div class="sub-bar"><div class="sub-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);margin-top:.22rem">
+          <span></span>
+          <span>Expires ${sub.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})}</span>
+        </div>
+      </div>` : ''}
+
+      <div class="lk-meta-grid">
+        <div>
+          <div class="lk-field-lbl">Email</div>
+          <div class="lk-field-val${t.email?'':' muted'}">${esc(t.email||'Not submitted')}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">WeChat</div>
+          <div class="lk-field-val${t.wechat?'':' muted'}">${esc(t.wechat||'Not submitted')}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">${idLabel}</div>
+          <div class="lk-field-val${idVal==='—'?' muted':''}" style="font-size:.67rem">${esc(idVal)}${(isSess && t.sessionDetails && idVal!=='—') ? `<button class="icopy" style="margin-left:.3rem;margin-top:.1rem" onclick="copyText(${JSON.stringify(t.sessionDetails)},this)">Copy</button>` : (!isSess && t.orgId ? `<button class="icopy" style="margin-left:.3rem;margin-top:.1rem" onclick="copyText('${esc(t.orgId)}',this)">Copy</button>` : '')}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">Access</div>
+          <div class="lk-field-val">${t.accessCount||0} open${(t.accessCount||0)!==1?'s':''} · ${t.firstAccessedAt ? fmt(t.firstAccessedAt) : 'Never'}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">Created</div>
+          <div class="lk-field-val">${fmt(t.createdAt)}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">Submitted</div>
+          <div class="lk-field-val${t.submittedAt?'':' muted'}">${t.submittedAt ? fmt(t.submittedAt) : '—'}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">Approved</div>
+          <div class="lk-field-val ${t.approvedAt?'green':' muted'}">${t.approvedAt ? fmt(t.approvedAt) : '—'}</div>
+        </div>
+        <div>
+          <div class="lk-field-lbl">Status</div>
+          <div class="lk-field-val">${statusBadgeHtml}</div>
+        </div>
+      </div>
+
+      <div class="lk-link-row">
+        <span class="lk-link-url">${esc(linkUrl)}</span>
+        <button class="copy-btn" onclick="copyText('${esc(linkUrl)}',this)">Copy Link</button>
+      </div>
+
+      <div class="lk-actions">
+        ${deactBtn}
+        ${t.used && !t.approved && !t.declined ? `<button class="approve-btn" onclick="approve('${tok}')">✓ Approve</button><button class="decline-btn" onclick="openDecline('${tok}')">✕ Decline</button>` : ''}
+        ${t.approved && t.email ? `<button class="btn btn-ghost-blue btn-sm" onclick="sendReminder('${tok}','reminder')">📧 5-day Reminder</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleDeactivate(token, deactivate) {
+  const r = await fetch('/admin/deactivate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ adminKey, token, deactivate })
+  });
+  const d = await r.json();
+  if (d.success) {
+    allTokens[token].deactivated   = deactivate;
+    allTokens[token].deactivatedAt = deactivate ? new Date().toISOString() : null;
+    renderLinks();
+    updateDeactBadge();
+  } else {
+    alert('Failed. Please try again.');
+  }
+}
+
+// ── Generate ──────────────────────────────────────────────────────────────────
+async function generateLink() {
+  const name       = document.getElementById('cust-name').value.trim();
+  const pkg        = document.getElementById('pkg').value;
+  const instrSetId = document.getElementById('instr-set').value || null;
+  const err        = document.getElementById('gen-err');
+  err.classList.remove('show');
+  if(!name||!pkg){err.textContent='Please fill in both fields.';err.classList.add('show');return;}
+  const r=await fetch('/admin/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,customerName:name,packageType:pkg,instrSetId})});
+  const d=await r.json();
+  if(d.error){err.textContent=d.error;err.classList.add('show');return;}
+  document.getElementById('gen-link').textContent=d.link;
+  document.getElementById('link-result').classList.add('show');
+  document.getElementById('copy-btn').textContent='Copy';
+  document.getElementById('copy-btn').classList.remove('done');
+  loadData();
+}
+function copyGenLink(){navigator.clipboard.writeText(document.getElementById('gen-link').textContent).then(()=>{const b=document.getElementById('copy-btn');b.textContent='Copied ✓';b.classList.add('done');});}
+
+// ── Email config ──────────────────────────────────────────────────────────────
+const PRESETS={gmail:{host:'smtp.gmail.com',port:'587',note:true},outlook:{host:'smtp-mail.outlook.com',port:'587'},yahoo:{host:'smtp.mail.yahoo.com',port:'587'},brevo:{host:'smtp-relay.brevo.com',port:'587'},sendgrid:{host:'smtp.sendgrid.net',port:'587'}};
+function preset(p){const pr=PRESETS[p];if(!pr)return;document.getElementById('em-host').value=pr.host;document.getElementById('em-port').value=pr.port;document.getElementById('em-ssl').checked=false;document.getElementById('gmail-guide').style.display=pr.note?'block':'none';}
+async function loadEC(){const r=await fetch(`/admin/email-config?adminKey=${encodeURIComponent(adminKey)}`);const d=await r.json();if(d.error)return;document.getElementById('em-host').value=d.host||'';document.getElementById('em-port').value=d.port||'587';document.getElementById('em-user').value=d.user||'';document.getElementById('em-pass').value=d.pass||'';document.getElementById('em-name').value=d.fromName||'DTC Digital Tools Corner';document.getElementById('em-ssl').checked=d.secure||false;if(d.host==='smtp.gmail.com')document.getElementById('gmail-guide').style.display='block';}
+async function saveEC(){const config={host:document.getElementById('em-host').value.trim(),port:document.getElementById('em-port').value.trim()||'587',user:document.getElementById('em-user').value.trim(),pass:document.getElementById('em-pass').value,fromName:document.getElementById('em-name').value.trim()||'DTC Digital Tools Corner',secure:document.getElementById('em-ssl').checked};if(!config.host||!config.user||!config.pass){showM('em',false,'Please fill in Host, Email and Password.');return;}const r=await fetch('/admin/email-config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,config})});const d=await r.json();showM('em',d.success,d.success?'✓ Configuration saved.':'Failed.');}
+async function testEmail(){const to=document.getElementById('em-user').value.trim();if(!to){showM('em',false,'Save your configuration first.');return;}document.getElementById('test-txt').textContent='Sending…';const r=await fetch('/admin/test-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({adminKey,to})});const d=await r.json();document.getElementById('test-txt').textContent='Send Test Email';showM('em',d.ok,d.ok?`✓ Test email sent to ${to}.`:'✕ '+d.error+(d.error?.includes('timeout')?' — Use a Gmail App Password, not your regular password.':''));}
+function showM(p,ok,msg){const o=document.getElementById(p+'-ok'),e=document.getElementById(p+'-err');o.classList.remove('show');e.classList.remove('show');const el=ok?o:e;el.textContent=msg;el.classList.add('show');}
+
+function renderEL(){const wrap=document.getElementById('email-log-wrap');if(!emailLog.length){wrap.innerHTML='<div class="empty">No emails sent yet.</div>';return;}const rows=[...emailLog].reverse().slice(0,30).map(e=>`<tr><td>${fmtFull(new Date(e.sentAt))}</td><td>${esc(e.to)}</td><td>${esc(e.subject)}</td><td><span class="badge ${e.type?.includes('expired')?'b-exp':e.type?.includes('remind')||e.type?.includes('manual')?'b-sub':'b-pend'}">${esc(e.type||'—')}</span></td></tr>`).join('');wrap.innerHTML=`<table class="email-log-tbl"><thead><tr><th>Sent At</th><th>To</th><th>Subject</th><th>Type</th></tr></thead><tbody>${rows}</tbody></table>`;}
+
+// ── Utils ─────────────────────────────────────────────────────────────────────
+function fmt(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function fmtFull(d){return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+function parseUA(ua){if(!ua||ua==='unknown')return'Unknown';if(/iPhone/i.test(ua))return'📱 iPhone';if(/iPad/i.test(ua))return'📱 iPad';if(/Android/i.test(ua)&&/Mobile/i.test(ua))return'📱 Android';if(/Android/i.test(ua))return'📱 Tablet';if(/Windows/i.test(ua))return'🖥 Windows';if(/Mac/i.test(ua))return'🖥 Mac';return'🌐 Browser';}
+function copyText(text,btn){navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied ✓';btn.classList.add('done');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('done');},2000);});}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
+</body>
+</html>
